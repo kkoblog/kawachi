@@ -5,16 +5,14 @@ import { useInView } from 'react-intersection-observer';
 import Link from 'next/link';
 
 // セクションヘッダーのコンポーネント化
-const SectionHeader = ({ title, subtitle }) => (
-  <div className="relative mb-8 md:mb-12 px-4">
-    <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-center text-black">
-      <span className="relative inline-block pb-4">
-        {title}
-        <span className="absolute -bottom-2 left-0 w-full h-1 bg-[#FFC6BD]"></span>
-      </span>
+const SectionHeader = ({ title, subtitle, style, showLine = true }) => (
+  <div className="relative mb-4 md:mb-6">
+    {showLine && <div className="w-1/2 h-1 mx-auto mb-4" style={{ backgroundColor: '#d2b48c' }}></div>}
+    <h2 className="text-2xl md:text-3xl font-medium text-center text-black whitespace-pre-line" style={style}>
+      {title}
     </h2>
     {subtitle && (
-      <p className="mt-6 text-sm md:text-lg lg:text-xl text-gray-600 text-center">
+      <p className="mt-6 text-sm md:text-lg lg:text-xl text-gray-600 text-center" style={style}>
         {subtitle}
       </p>
     )}
@@ -233,6 +231,9 @@ function MainComponent() {
   }, []);
 
   // トップへスクロール
+  // ハンバーガーメニューの開閉状態
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
@@ -252,6 +253,7 @@ function MainComponent() {
         top: offsetPosition,
         behavior: 'smooth'
       });
+      setIsMenuOpen(false); // メニューを閉じる
     }
   };
 
@@ -358,95 +360,6 @@ function MainComponent() {
     }
   }, [section3InView]);
 
-  const RequirementSection = () => {
-    const requirements = [
-      {
-        main: "家族との時間を大切にしながらキャリアを築きたい方",
-        sub: "自社託児所完備・時短勤務OK・働く時間を選べる環境で、子育てと両立したい方"
-      },
-      {
-        main: "花に囲まれた癒しの空間で高単価サロンを目指したい方",
-        sub: "名古屋唯一の花屋併設美容院で、平均単価¥15,000の高生産性を実現したい方"
-      },
-      {
-        main: "早期スタイリストデビューと多彩なキャリアを望む方",
-        sub: "1-2年以内の確実なスタイリストデビューと、アイリスト・ブライダル事業など複数のスキルを身につけたい方"
-      },
-      {
-        main: "会社からの手厚いサポートで売上アップを目指したい方",
-        sub: "最高レベルの集客サポートで、月200-300万円の売上実績を持つスタイリストから成功の秘訣を学びたい方"
-      },
-      {
-        main: "自分のアイデアや「やりたい」を形にできる環境を求める方",
-        sub: "ネイル・エステ事業など新しい挑戦を応援する、みんなの「やりたい」を形にする会社で働きたい方"
-      }
-    ];
-
-    const [ref, inView] = useInView({
-      triggerOnce: true,
-      threshold: 0.2,
-      rootMargin: '-50px'
-    });
-
-    return (
-      <section className="py-16 md:py-24 bg-gradient-to-r from-[#D3B58D]/10 to-[#D3B58D]/5">
-        <SectionHeader 
-          title="求める人材"
-          subtitle="私たちと一緒に働きませんか？"
-        />
-
-    
-        
-        <div className="max-w-6xl mx-auto px-4">
-          <div 
-            ref={ref}
-            className={`space-y-6 transition-all duration-700 ${
-              inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-            }`}
-          >
-            {requirements.map((req, index) => (
-              <div 
-                key={index}
-                className="bg-white rounded-lg p-6 md:p-8 shadow-sm hover:shadow-md transition-all duration-300"
-              >
-                <div className="flex items-start space-x-4">
-                  <div className="flex-shrink-0 mt-1">
-                    <div className="w-6 h-6 bg-[#FF998A]/20 rounded-full flex items-center justify-center">
-                      <span className="text-[#FF998A] text-sm font-medium">
-                        {index + 1}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="space-y-2 w-full">
-                    <p className="text-base md:text-lg font-bold text-black">
-                      {req.main}
-                    </p>
-                    <p className="text-sm md:text-base text-gray-600">
-                      {req.sub}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          
-
-          <div className="flex flex-col sm:flex-row gap-4 items-center justify-center mt-12">
-            <a 
-          href="https://salonjobs.hairbook.jp/salons/43562/" 
-          target="_blank" 
-          rel="noopener noreferrer" 
-          className="bg-[#FF9E81] text-white px-8 py-3 rounded-full hover:bg-[#FF8A69] transition duration-300 text-base w-64 text-center mx-auto"
-        >
-          ママ美容師はこちら<br />サポート制度を見る
-        </a>
-          </div>
-        </div>
-      </section>
-    );
-  };
-
   // 悩みセクション用のIntersectionObserver設定を調整
   const { ref: concernsRef, inView: concernsInView } = useInView({
     triggerOnce: true,
@@ -455,664 +368,779 @@ function MainComponent() {
   });
 
   return (
-    <div className="font-noto-sans relative">
-      <header className="relative bg-[#fafafa] p-0 m-0 overflow-hidden">
-        <video
-          src="/farst.mp4"
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
-          loading="eager"
-          className="w-screen h-screen md:h-[500px] object-cover"
+    <div className="font-noto-sans relative max-w-[393px] mx-auto bg-white">
+      {/* ヘッダー */}
+      <header className="sticky top-0 z-50 bg-[#d2b48c] shadow-sm">
+        <div className="flex items-center justify-between px-4 py-4">
+          {/* 左側：ロゴ */}
+          <div className="flex-shrink-0">
+            <img
+              src="/image/logo.png"
+              alt="luum"
+              className="h-10 w-auto"
+            />
+          </div>
+          
+          {/* 右側：ハンバーガーメニュー */}
+          <button 
+            className="flex flex-col items-center justify-center w-10 h-10 space-y-1.5 relative z-[60]"
+            aria-label="メニュー"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          >
+            <span className={`block w-6 h-0.5 bg-white transition-all duration-300 ${isMenuOpen ? 'rotate-45 translate-y-2' : ''}`}></span>
+            <span className={`block w-6 h-0.5 bg-white transition-all duration-300 ${isMenuOpen ? 'opacity-0' : ''}`}></span>
+            <span className={`block w-6 h-0.5 bg-white transition-all duration-300 ${isMenuOpen ? '-rotate-45 -translate-y-2' : ''}`}></span>
+          </button>
+        </div>
+      </header>
+
+      {/* ハンバーガーメニューのオーバーレイ */}
+      {isMenuOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-40 transition-opacity duration-300"
+          onClick={() => setIsMenuOpen(false)}
+        />
+      )}
+
+      {/* サイドメニュー */}
+      <div className={`fixed top-0 right-0 h-full w-64 bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+        {/* 閉じるボタン */}
+        <div className="flex justify-end p-4">
+          <button
+            onClick={() => setIsMenuOpen(false)}
+            className="w-10 h-10 flex items-center justify-center text-gray-600 hover:text-[#d2b48c] transition-colors duration-200"
+            aria-label="メニューを閉じる"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        
+        <nav className="px-6">
+          <ul className="space-y-6">
+            <li>
+              <button
+                onClick={() => scrollToSection('reasons')}
+                className="w-full text-left text-lg text-gray-800 hover:text-[#d2b48c] transition-colors duration-200 py-3 border-b border-gray-200"
+                style={{ fontFamily: 'Yu Mincho, serif' }}
+              >
+                luumが選ばれる理由
+              </button>
+            </li>
+            <li>
+              <button
+                onClick={() => scrollToSection('recommended')}
+                className="w-full text-left text-lg text-gray-800 hover:text-[#d2b48c] transition-colors duration-200 py-3 border-b border-gray-200"
+                style={{ fontFamily: 'Yu Mincho, serif' }}
+              >
+                このような方におすすめ
+              </button>
+            </li>
+            <li>
+              <button
+                onClick={() => scrollToSection('pricing')}
+                className="w-full text-left text-lg text-gray-800 hover:text-[#d2b48c] transition-colors duration-200 py-3 border-b border-gray-200"
+                style={{ fontFamily: 'Yu Mincho, serif' }}
+              >
+                料金プラン
+              </button>
+            </li>
+            <li>
+              <button
+                onClick={() => scrollToSection('faq')}
+                className="w-full text-left text-lg text-gray-800 hover:text-[#d2b48c] transition-colors duration-200 py-3 border-b border-gray-200"
+                style={{ fontFamily: 'Yu Mincho, serif' }}
+              >
+                よくある質問
+              </button>
+            </li>
+          </ul>
+        </nav>
+      </div>
+
+      {/* ファーストビュー画像 */}
+      <div className="relative bg-[#fafafa] overflow-hidden">
+        <img
+          src="/image/luum3.jpeg"
+          alt="ファーストビュー画像"
+          className="w-full h-[60vh] object-cover"
           style={{ maxHeight: '100vh' }}
         />
-      </header>
+      </div>
 
       {/* 動画下にテキストを移動 */}
       <section className="bg-white py-8 md:py-16 px-4 text-center">
-        <p className="text-base md:text-2xl font-medium mb-6">
-          "普通の2倍"チャンスに手を挙げてきた<br />
-          君だからこそ。
+        <p className="text-2xl md:text-3xl font-bold mb-6 text-center" style={{ fontFamily: 'Yu Mincho, serif' }}>
+          整うコトで、全てが変わる。
         </p>
-        <p className="text-base md:text-xl leading-relaxed max-w-2xl mx-auto mb-6">
-          1年後、周りの誰よりも輝き、<br />
-          誰もが認める美容師になれる。
+        <p className="text-lg md:text-2xl leading-loose max-w-2xl mb-6 text-center" style={{ fontFamily: 'Hiragino Kaku Gothic, sans-serif', color: '#374151' }}>
+          家族を優先してきたあなたへ。<br />
+          今度は、自分を整える番です。<br /><br />
+          luumは、心と体を整えながら、<br />
+          本来の美しさを育てていける場所。
         </p>
-        <p className="text-2xl md:text-4xl lg:text-5xl font-medium">
-          <span className="inline-block">
-            <span className="text-xl md:text-3xl lg:text-4xl">花屋併設の美容院</span><br />mallow（マロウ）
-          </span>
-        </p>
-      </section>
-
-      <div className="mt-8 md:mt-12 px-4 max-w-6xl mx-auto">
-        <div className="text-center mb-4 text-xl md:text-2xl font-medium text-gray-800">
-          まずはこの3分動画をご覧ください
-        </div>
-        <div className="w-full aspect-video rounded-lg shadow-lg overflow-hidden">
-          <video 
-            src="/nagatasan1.mp4" 
-            controls 
-            className="w-full h-full object-cover"
-            preload="metadata"
-            poster="image/samune.png"
-            loading="eager"
-            playsInline
-          />
-        </div>
-      </div>
-
-      <section className="py-16 md:py-24 mt-8 md:mt-12">
-        <SectionHeader 
-          title="世の中の20代女性美容師さんが抱える悩み事、当サロンでは一切致しません"
-          subtitle="現場で困らせること"
-        />
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="grid grid-cols-2 gap-2 md:gap-8">
-            {/* 左側: 一般的な美容室の悩み */}
-            <div className="p-2 md:p-6 rounded-lg">
-              <h3 className="text-base md:text-xl font-bold text-center mb-3 md:mb-6 text-gray-600">＜他店＞</h3>
-              <div className="flex flex-col items-center gap-2 md:gap-4">
-                {concerns.map((concern, index) => (
-                  <React.Fragment key={index}>
-                    <div 
-                      className={`border-2 border-gray-200 rounded-lg p-2 md:p-4 w-full text-center bg-white shadow-sm transition-all duration-500 text-xs md:text-base leading-relaxed whitespace-pre-line`}
-                    >
-                      {concern}
-                    </div>
-                    
-                    {index < concerns.length - 1 && (
-                      <div className="text-gray-400 text-base md:text-2xl">
-                        ↓
-                      </div>
-                    )}
-                  </React.Fragment>
-                ))}
-              </div>
-            </div>
-
-            {/* 右側: mallowでの解決策 */}
-            <div className="p-2 md:p-6 rounded-lg">
-              <h3 className="text-base md:text-xl font-bold text-center mb-3 md:mb-6 text-[#FF998A]">＜mallowの場合＞</h3>
-              <div className="flex flex-col items-center gap-2 md:gap-4">
-                {[
-                  "厳しい監視や指導はなく、平均15,000円以上の高単価サロンで安定した環境",
-                  "「休みを申請しても却下される」ことはなく、「推しのライブには行け」は当サロンの10か条の一つ",
-                  "無理をし続ける必要はなく、「いいところを見つけよう」という環境",
-                  "プレッシャーや重責で疲弊することなく、心理的安全性を保ち、好きな美容師という仕事をより好きになり、周りにも幸せを配れるように"
-                ].map((solution, index) => (
-                  <React.Fragment key={index}>
-                    <div 
-                      className={`border-2 border-[#FF998A] rounded-lg p-2 md:p-4 w-full text-center bg-white shadow-sm transition-all duration-500 text-xs md:text-base leading-relaxed`}
-                    >
-                      {solution}
-                    </div>
-                    
-                    {index < 3 && (
-                      <div className="text-[#FF998A] text-base md:text-2xl">
-                        ↓
-                      </div>
-                    )}
-                  </React.Fragment>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <div className="mt-4 bg-gradient-to-r from-[#D3B58D]/10 to-[#D3B58D]/5 rounded-3xl p-6 md:p-8 relative overflow-hidden">
-        <div className="absolute inset-0 bg-white/50"></div>
-        
-        <div className="relative z-10">
-        <SectionHeader 
-          title="mallowの特徴"
-          
-        />
-
-         
-<div className="mt-8 md:mt-12 px-4 max-w-6xl mx-auto">
-  <div 
-    className={`max-w-lg mx-auto transition-all duration-1000 ${
-      featuresInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-    }`}
-  >
-    <ImageSlideshow />
-  </div>
-</div>
-
-          <br />
-
-          <div 
-            ref={featuresRef}
-            className="text-base md:text-xl leading-relaxed text-center max-w-3xl mx-auto space-y-6"
-          >
-            <div 
-              className={`bg-white rounded-lg p-6 shadow-md border border-[#D3B58D]/20 hover:shadow-lg transition-all duration-700 ${
-                featuresInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-              }`}
-              style={{ transitionDelay: '100ms' }}
-            >
-              <span className="text-[#FF998A] font-bold text-lg">①</span>
-              365日季節のお花に囲まれた、心安らぐ癒しの空間
-              <br />
-              <br />
-              <span className="text-gray-700 text-sm md:text-base">
-                名古屋唯一の<span className="bg-[#FF998A]/20 px-1">花屋併設美容院</span>として、季節のお花に囲まれながら施術ができます。お花好きのお客様との<span className="bg-[#FF998A]/20 px-1">自然な会話</span>が生まれ、癒しの空間で心地よく働けます。お花に魅かれて来店されるお客様も多く、<span className="bg-[#FF998A]/20 px-1">まるでお花カフェのような温かな雰囲気</span>の中で、新しい美容師ライフをスタートできます。
-              </span>
-            </div>
-
-            <div 
-              className={`bg-white rounded-lg p-6 shadow-md border border-[#D3B58D]/20 hover:shadow-lg transition-all duration-700 ${
-                featuresInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-              }`}
-              style={{ transitionDelay: '300ms' }}
-            >
-              <span className="text-[#FF998A] font-bold text-lg">②</span>
-              互いを認め合える、優しい仲間たち
-              <br />
-              <br />
-              <span className="text-gray-700 text-sm md:text-base">
-                <span className="bg-[#FF998A]/20 px-1">「誰かを批判するのではなく、いいところを見つけよう」</span>という文化が根付いています。<span className="bg-[#FF998A]/20 px-1">平均単価15,000円以上</span>の安定した環境で、焦ることなく成長できます。新人教育も丁寧で、<span className="bg-[#FF998A]/20 px-1">先輩からの過度な監視や重圧を感じることなく</span>、安心して技術を磨けます。
-              </span>
-            </div>
-
-            <div 
-              className={`bg-white rounded-lg p-6 shadow-md border border-[#D3B58D]/20 hover:shadow-lg transition-all duration-700 ${
-                featuresInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-              }`}
-              style={{ transitionDelay: '500ms' }}
-            >
-              <span className="text-[#FF998A] font-bold text-lg">③</span>
-              推しのために休める、充実の休暇制度
-              <br />
-              <br />
-              <span className="text-gray-700 text-sm md:text-base">
-                <span className="bg-[#FF998A]/20 px-1">年間3〜4回のライブ参加ok！</span>完全週休2日制と自由休暇5日でしっかりサポート。<span className="bg-[#FF998A]/20 px-1">「推しのライブには行け」</span>は当サロンの10か条の一つです。プライベートも仕事も大切にできる、あなたの理想の働き方を実現できます。
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <section className="py-16 md:py-24 bg-gradient-to-r from-[#D3B58D]/10 to-[#D3B58D]/5">
-        <SectionHeader 
-          title="mallowで働くことで得られる事"
-          subtitle="あなたらしい働き方"
-        />
-        <div className="max-w-6xl mx-auto px-4">
-          <div 
-            ref={contentRef}
-            className="space-y-8"
-          >
-            <div 
-              ref={section1Ref}
-              className={`bg-white p-8 rounded-lg shadow transition-all duration-700 ${
-                contentInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-              }`}
-              style={{ transitionDelay: '100ms' }}
-            >
-              <h3 className="text-2xl mb-4 font-bold">
-                大好きな美容師がもっと楽しめるようになる
-              </h3>
-              <div className="flex flex-col md:flex-row gap-4 md:gap-6">
-                <div className="w-full md:w-[400px] flex-shrink-0 relative">
-                  <Image
-                    src="/image/erarerukoto.jpg"
-                    alt="スタッフの様子"
-                    width={400}
-                    height={300}
-                    className="w-full h-[400px] md:h-[300px] rounded-lg object-cover"
-                  />
-                  <div className="absolute inset-0 overflow-hidden">
-                    <Image
-                      src="/image/erarerukoto2.jpg"
-                      alt="スタッフの様子2"
-                      width={400}
-                      height={300}
-                      className="w-full h-[400px] md:h-[300px] rounded-lg object-cover opacity-0"
-                      style={{
-                        animation: startAnimation1 ? 'blurReveal 3s ease-in-out forwards' : 'none'
-                      }}
-                      priority={true}
-                    />
-                  </div>
-                </div>
-                <p className="text-base md:text-lg leading-relaxed">
-                  これにより、疲弊する人間関係とはおさらば、本当の意味で信頼できる仲間に出会え生涯を通しての付き合いも。心にも余裕ができ プライベートも充実します。
-                </p>
-              </div>
-            </div>
-
-            <div 
-              ref={section2Ref}
-              className={`bg-white p-8 rounded-lg shadow transition-all duration-700 ${
-                contentInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-              }`}
-              style={{ transitionDelay: '200ms' }}
-            >
-              <h3 className="text-2xl mb-4 font-bold">
-                仕事で海外にいけるチャンスがある
-              </h3>
-              <div className="flex flex-col md:flex-row gap-4 md:gap-6">
-                <div className="w-full md:w-[400px] flex-shrink-0 relative">
-                  <Image
-                    src="/image/kaigai.jpg"
-                    alt="スタッフの様子"
-                    width={400}
-                    height={300}
-                    className="w-full h-[400px] md:h-[300px] rounded-lg object-cover"
-                  />
-                  <div className="absolute inset-0 overflow-hidden">
-                    <Image
-                      src="/image/kaigai2.jpg"
-                      alt="スタッフの様子2"
-                      width={400}
-                      height={300}
-                      className="w-full h-[400px] md:h-[300px] rounded-lg object-cover opacity-0"
-                      style={{
-                        animation: startAnimation2 ? 'blurReveal 3s ease-in-out forwards' : 'none'
-                      }}
-                      priority={true}
-                    />
-                  </div>
-                  <div className="absolute inset-0 overflow-hidden">
-                    <Image
-                      src="/image/kaigai3.jpg"
-                      alt="スタッフの様子3"
-                      width={400}
-                      height={300}
-                      className="w-full h-[400px] md:h-[300px] rounded-lg object-cover opacity-0"
-                      style={{
-                        animation: startAnimation2 ? 'blurReveal 3s ease-in-out 3.5s forwards' : 'none'
-                      }}
-                      priority={true}
-                    />
-                  </div>
-                </div>
-                <p className="text-base md:text-lg leading-relaxed">
-                  これにより、1人では中々叶えられないビジョンを会社と共叶えることができる。昨年はマレーシアでヘアメイクのお仕事をしました。今年は韓国にもお仕事で行く予定です！
-                </p>
-              </div>
-            </div>
-
-            <div 
-              ref={section3Ref}
-              className={`bg-white p-8 rounded-lg shadow transition-all duration-700 ${
-                contentInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-              }`}
-              style={{ transitionDelay: '300ms' }}
-            >
-              <h3 className="text-2xl mb-4 font-bold">
-                CSR(社会貢献)にも積極的なので好きな仕事で貢献できるチャンスがある
-              </h3>
-              <div className="flex flex-col md:flex-row gap-4 md:gap-6">
-                <div className="w-full md:w-[400px] flex-shrink-0 relative">
-                  <Image
-                    src="/image/kouken.jpg"
-                    alt="スタッフの様子"
-                    width={400}
-                    height={300}
-                    className="w-full h-[400px] md:h-[300px] rounded-lg object-cover"
-                  />
-                  <div className="absolute inset-0 overflow-hidden">
-                    <Image
-                      src="/image/kouken2.jpg"
-                      alt="スタッフの様子2"
-                      width={400}
-                      height={300}
-                      className="w-full h-[400px] md:h-[300px] rounded-lg object-cover opacity-0"
-                      style={{
-                        animation: startAnimation3 ? 'blurReveal 3s ease-in-out forwards' : 'none'
-                      }}
-                      priority={true}
-                    />
-                  </div>
-                  <div className="absolute inset-0 overflow-hidden">
-                    <Image
-                      src="/image/kouken3.jpg"
-                      alt="スタッフの様子3"
-                      width={400}
-                      height={300}
-                      className="w-full h-[400px] md:h-[300px] rounded-lg object-cover opacity-0"
-                      style={{
-                        animation: startAnimation3 ? 'blurReveal 3s ease-in-out 3.5s forwards' : 'none'
-                      }}
-                      priority={true}
-                    />
-                  </div>
-                </div>
-                <p className="text-base md:text-lg leading-relaxed">
-                  これにより、毎日がHAPPYに！若いうちから社会貢献に触れることで人に優しく仲間想いにと、人間性が高められ波動の良い組織に入られます。
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-16">
-            <div 
-              className={`bg-white p-8 rounded-lg shadow transition-all duration-700 ${
-                contentInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-              }`}
-            >
-              <SectionHeader 
-          title={<>サロンワークの<br />とある1日(早番)</>}
-          
-        />
-              
-              
-              <div className="max-w-2xl mx-auto">
-                <div className="space-y-4">
-                  {[
-                    { time: "9:00", activity: <>出勤＆朝練<br /><span className="text-xs">（朝練を推奨しています）</span></> },
-                    { time: "9:30", activity: "掃除＆お花の水替え" },
-                    { time: "10:00", activity: "営業開始" },
-                    { time: "12:00", activity: <>本日2人目のお客様（<span className="text-sm">カットカラートリートメント２時間施術</span>）</> },
-                    { time: "14:00", activity: <>お昼ご飯<br /><span className="text-sm">（随時順番に）</span></> },
-                    { time: "16:00", activity: <>おやつタイム<br /><span className="text-sm">（各店舗おやつボックスがある）</span></> },
-                    { time: "18:30", activity: "早番帰りの掃除" },
-                    { time: "19:00", activity: "退勤" },
-                  ].map((schedule, index) => (
-
-                    <div 
-                      key={index}
-                      className="flex items-center gap-6 p-4 hover:bg-[#D3B58D]/5 rounded-lg transition-colors duration-300"
-                    >
-                      <div className="w-24 flex-shrink-0">
-                        <span className="font-bold text-[#FF998A]">{schedule.time}</span>
-                      </div>
-                      <div className="flex-grow">
-                        <span className="text-gray-700">{schedule.activity}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-               
-              </div>
-            </div>
-          </div>
-
-          <div className="flex flex-col sm:flex-row gap-4 items-center justify-center mt-12">
-           
-            <a 
-          href="https://salonjobs.hairbook.jp/salons/43562/" 
-          target="_blank" 
-          rel="noopener noreferrer" 
-          className="bg-[#FF9E81] text-white px-8 py-3 rounded-full hover:bg-[#FF8A69] transition duration-300 text-base w-64 text-center mx-auto"
-        >
-          ママ美容師はこちら<br />サポート制度を見る
-        </a>
-            
-          </div>
-          
-        </div>
         
       </section>
 
-      <section className="py-16 md:py-24">
-      <SectionHeader 
-          title="働く仲間へインタビュー"
-          subtitle="スタッフの声"
+      <section className="bg-white py-8 md:py-16 text-center">
+        <SectionHeader 
+          title={`子育てが落ち着いても、\n"満たされない"理由がわからない`}
+          style={{ fontFamily: 'Yu Mincho, serif', color: '#374151' }}
+          showLine={false}
         />
-        
-        <div className="max-w-5xl mx-auto px-4">
-          <div className="space-y-8">
-            <StaffCard 
-              image="/image/sara.jpg"
-              name="さら"
-              position="入社5年目 / スタイリスト"
-              videoUrl="/intabyu.mp4"
+        <div className="w-full">
+          <div className="flex justify-center">
+            <img 
+              src="/image/nayami1.png" 
+              alt="悩みの画像"
+              className="w-full h-auto"
             />
-            {/* 必要に応じて追加のStaffCardを配置 */}
           </div>
         </div>
       </section>
 
-    
+      <section className="bg-white py-8 md:py-16 text-center">
+        <SectionHeader 
+          title={`luumに通うと・・・`}
+          style={{ fontFamily: 'Yu Mincho, serif', color: '#374151' }}
+          showLine={false}
+        />
+        
 
-<section className="py-16 md:py-24 bg-gradient-to-r from-[#D3B58D]/10 to-[#D3B58D]/5">
-  <SectionHeader 
-    title="募集要項"
-    subtitle="採用情報"
-  />
-  <div className="max-w-6xl mx-auto px-4">
-    <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-      {[
-        {
-          title: "勤務地",
-          content: "愛知県名古屋市中区丸の内2-19-19丸の内ヒルズ3F"
-        },
-        {
-          title: "募集職種",
-          content: "スタイリスト"
-        },
-        {
-          title: "募集形態",
-          content: "正社員、時短社員、パート"
-        },
-        {
-          title: "給与",
-          content: (
-            <div className="space-y-6">
-              <div>
-                <p className="font-medium mb-2">基本給</p>
-                <p className="text-gray-600">スタイリスト：215,000円～＋手当</p>
-              </div>
-              <div>
-                <p className="font-medium mb-2">歩合給例</p>
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <p className="font-medium">技術売上110万円の場合</p>
-                  <p className="text-gray-600">110万-66万(基本給)÷1.1(消費税)×45%+23万(基本給)＝41万円</p>
-                </div>
-              </div>
-              <div>
-                <p className="font-medium mb-2">時短勤務の場合</p>
-                <div className="space-y-2 text-gray-600">
-                  <p>2時間時短：</p>
-                  <ul className="list-disc list-inside ml-4">
-                    <li>215,000円×6/8＝161,250円</li>
-                    <li>230,000円×6/8＝172,500円</li>
-                  </ul>
-                  <p>3時間時短：</p>
-                  <ul className="list-disc list-inside ml-4">
-                    <li>215,000円×5/8＝134,375円</li>
-                    <li>230,000円×5/8＝143,750円</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          )
-        },
-        {
-          title: "休日",
-          content: (
-            <ul className="list-disc list-inside space-y-1 text-gray-600">
-              <li>完全週休2日</li>
-              <li>夏季休暇2日</li>
-              <li>自由休暇5日(11日)</li>
-              <li>年末年始5日</li>
-              <li>半休2日(有給1日)</li>
-              <li>土日休みあり</li>
-            </ul>
-          )
-        },
-        {
-          title: "待遇",
-          content: (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <ul className="list-disc list-inside space-y-1 text-gray-600">
-                  <li>推し活応援</li>
-                  <li>早番＆遅番制度あり</li>
-                  <li>時短勤務あり</li>
-                  <li>交通費15,000円まで支給</li>
-                  <li>自転車通勤5,000円支給</li>
-                  <li>住宅手当10,000円支給</li>
-                  <li>役職手当10,000円支給</li>
-                  <li>子供手当あり（0-6歳：10,000円、7-15歳：5,000円）</li>
-                  <li>フリー入客も歩合率45%～</li>
-                </ul>
-              </div>
-              <div>
-                <ul className="list-disc list-inside space-y-1 text-gray-600">
-                  <li>アイリスト兼任/歩合率10%</li>
-                  <li>ブライダル事業あり</li>
-                  <li>託児所付き/子供を預けて働ける</li>
-                  <li>ヘアスク導入サロン</li>
-                  <li>講習手当/半額支給</li>
-                  <li>予約状況で早上がり有り</li>
-                  <li>夜練ナシ朝練推奨/営業内に講習</li>
-                  <li>全席iPad完備/フルフラットユメスイー</li>
-                </ul>
-                <p className="mt-4 text-sm text-gray-500">※パートの場合は出勤日数や労働時間により待遇が異なります。</p>
-              </div>
-            </div>
-          )
-        },
-        {
-          title: "福利厚生",
-          content: "社会保険完備（健康保険/厚生年金/雇用保険/労災）"
-        }
-      ].map((item, index) => (
-        <div 
-          key={index}
-          className={`flex flex-col md:flex-row border-b border-gray-100 ${
-            index % 2 === 0 ? 'bg-white' : 'bg-gray-50'
-          }`}
-        >
-          <div className="w-full md:w-1/4 p-4 md:p-6 bg-[#D3B58D]/5">
-            <h4 className="font-bold text-gray-800">{item.title}</h4>
-          </div>
-          <div className="w-full md:w-3/4 p-4 md:p-6">
-            {typeof item.content === 'string' ? (
-              <p className="text-gray-600">{item.content}</p>
-            ) : (
-              item.content
-            )}
+        <p className="text-lg md:text-2xl leading-loose max-w-2xl mb-6 text-left px-8" style={{ fontFamily: 'Hiragino Kaku Gothic, sans-serif', color: '#374151' }}>
+          整える時間が、あなたの"心と体"を、美しく生まれ変わらせます。
+        </p>
+        
+        <div className="max-w-2xl mx-auto px-8 mb-6">
+          <ul className="space-y-3 text-base md:text-lg leading-relaxed text-left" style={{ fontFamily: 'Hiragino Kaku Gothic, sans-serif', color: '#374151' }}>
+            <li className="flex items-start">
+              <span className="text-green-500 mr-3 flex-shrink-0 self-center">✓</span>
+              <span className="text-left" style={{ color: '#374151' }}>姿勢が整い、背筋が自然と伸びる</span>
+            </li>
+            <li className="flex items-start">
+              <span className="text-green-500 mr-3 flex-shrink-0 self-center">✓</span>
+              <span className="text-left" style={{ color: '#374151' }}>代謝が上がり、体のラインが引き締まる</span>
+            </li>
+            <li className="flex items-start">
+              <span className="text-green-500 mr-3 flex-shrink-0 self-center">✓</span>
+              <span className="text-left" style={{ color: '#374151' }}>深い呼吸で、心まで軽くなる</span>
+            </li>
+            <li className="flex items-start">
+              <span className="text-green-500 mr-3 flex-shrink-0 self-center">✓</span>
+              <span className="text-left" style={{ color: '#374151' }}>"整う時間"を通して、自分を大切にできるようになる</span>
+            </li>
+            <li className="flex items-start">
+              <span className="text-green-500 mr-3 flex-shrink-0 self-center">✓</span>
+              <span className="text-left" style={{ color: '#374151' }}>気づけば、表情まで明るく、日常に自信が戻ってくる</span>
+            </li>
+          </ul>
+        </div>
+        <div className="max-w-2xl mx-auto px-8 mb-6">
+          <div className="flex justify-center">
+            <img 
+              src="/image/tokutyou.png" 
+              alt="悩みの画像"
+              className="w-full h-auto"
+            />
           </div>
         </div>
-      ))}
-    </div>
+      </section>
 
+      <section id="reasons" className="bg-white py-8 md:py-16 text-center">
+        <SectionHeader 
+          title={`luumが選ばれる理由`}
+          style={{ fontFamily: 'Hiragino Kaku Gothic, sans-serif', color: '#d2b48c' }}
+          
+        />
+        
+        <p className="text-xl md:text-3xl leading-loose max-w-2xl mb-6 text-left px-8" style={{ fontFamily: 'Yu Mincho, serif', color: '#374151' }}>
+        一人ひとりに寄り添う、セミパーソナルレッスン
+        </p>
+        
+        <div className="max-w-2xl mx-auto px-8 mb-6">
+          <ul className="space-y-3 text-base md:text-lg leading-loose text-left" style={{ fontFamily: 'Hiragino Kaku Gothic, sans-serif', color: '#374151' }}>
+            <li className="flex items-start">
+              
+              <span className="text-left" style={{ color: '#374151' }}>最大8名までの少人数制。
+大手スタジオのように流れ作業ではなく、
+講師が一人ひとりの身体の癖や状態を丁寧にサポート。
+"無理なく整う"実感が、続けるほどに深まります。</span>
+            </li>
+            
+          </ul>
+         </div>
+
+        <div className="max-w-2xl mx-auto px-8 mb-6">
+          <div className="flex justify-center">
+            <img 
+              src="/image/kayouto.png" 
+              alt="悩みの画像"
+              className="w-full h-auto"
+            />
+          </div>
+        </div>
+        <p className="text-xl md:text-3xl leading-loose max-w-2xl mb-6 text-left px-8" style={{ fontFamily: 'Yu Mincho, serif', color: '#374151' }}>
+         女性の感性を満たす、上質で心地よい空間
+        </p>
+        
+        <div className="max-w-2xl mx-auto px-8 mb-6">
+          <ul className="space-y-3 text-base md:text-lg leading-loose text-left" style={{ fontFamily: 'Hiragino Kaku Gothic, sans-serif', color: '#374151' }}>
+            <li className="flex items-start">
+              
+              <span className="text-left" style={{ color: '#374151' }}>美容室を運営してきた私たちがこだわった、
+女性のための美しい内装と居心地。
+「自分のための時間」を過ごす場所として、
+通うたびに心が整い、気分が上がるスタジオです。</span>
+            </li>
+            
+          </ul>
+         </div>
+
+        <div className="max-w-2xl mx-auto px-8 mb-6">
+          <div className="flex justify-center">
+            <img 
+              src="/image/tokutyou1.png" 
+              alt="悩みの画像"
+              className="w-full h-auto"
+            />
+          </div>
+        </div>
+        <p className="text-xl md:text-3xl leading-loose max-w-2xl mb-6 text-left px-8" style={{ fontFamily: 'Yu Mincho, serif', color: '#374151' }}>
+        ”美と健康"をトータルで支える、特別なサポート
+        </p>
+        
+        <div className="max-w-2xl mx-auto px-8 mb-6">
+          <ul className="space-y-3 text-base md:text-lg leading-loose text-left" style={{ fontFamily: 'Hiragino Kaku Gothic, sans-serif', color: '#374151' }}>
+            <li className="flex items-start">
+              
+              <span className="text-left" style={{ color: '#374151' }}>水素水が飲み放題で、身体の内側からも美しく。
+さらに、美容院との連携でヘアケアや美容商材も体験可能。
+外側と内側、両方から「整える」を叶えます。</span>
+            </li>
+            
+          </ul>
+         </div>
+
+        <div className="max-w-2xl mx-auto px-8 mb-6">
+          <div className="flex justify-center">
+            <img 
+              src="/image/tokutyou2.png" 
+              alt="悩みの画像"
+              className="w-full h-auto"
+            />
+          </div>
+        </div>
+      </section>
+
+       <section id="recommended" className="bg-white py-8 md:py-16 text-center">
+         <SectionHeader 
+           title={`このような方におすすめです`}
+           style={{ fontFamily: 'Hiragino Kaku Gothic, sans-serif', color: '#d2b48c' }}
+           
+         />
+         <p className="text-lg md:text-2xl leading-loose max-w-2xl mb-6 text-left px-8" style={{ fontFamily: 'Yu Mincho, serif', color: '#374151' }}>
+         家族のために頑張ってきたけれど、そろそろ“自分のための時間”も大切にしたい。そんな40代女性のあなたへ。
+        </p>
+         
+         <div className="max-w-6xl mx-auto px-4">
+           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+             {/* カード1 */}
+            <div className="bg-white rounded-xl p-6 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex gap-4 border border-gray-100">
+              <div className="flex-shrink-0 flex flex-col items-center gap-3">
+                <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#d2b48c] to-[#c9a87a] flex items-center justify-center shadow-md">
+                  <span className="text-lg font-bold text-white" style={{ fontFamily: 'Arial, sans-serif' }}>1</span>
+                </div>
+                <img 
+                  src="/image/osusume1.png" 
+                  alt="姿勢や体型"
+                  className="w-24 h-24 object-cover rounded-lg shadow-sm"
+                />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-base font-medium mb-5 text-left" style={{ fontFamily: 'Yu Mincho, serif', color: '#374151' }}>
+                  最近、鏡に映る自分の姿勢や体型が気になる
+               </h3>
+                <p className="text-xs leading-relaxed text-left" style={{ fontFamily: 'Hiragino Kaku Gothic, sans-serif', color: '#374151' }}>
+                  背中が丸くなった気がする、下腹やお尻のラインが変わってきた…<br />「このまま年齢に流されるのはイヤ」と思ったことはありませんか？
+               </p>
+              </div>
+             </div>
+
+             {/* カード2 */}
+            <div className="bg-white rounded-xl p-6 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex gap-4 border border-gray-100">
+              <div className="flex-shrink-0 flex flex-col items-center gap-3">
+                <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#d2b48c] to-[#c9a87a] flex items-center justify-center shadow-md">
+                  <span className="text-lg font-bold text-white" style={{ fontFamily: 'Arial, sans-serif' }}>2</span>
+                </div>
+                <img 
+                  src="/image/osusume2.png" 
+                  alt="運動"
+                  className="w-24 h-24 object-cover rounded-lg shadow-sm"
+                />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-base font-medium mb-5 text-left" style={{ fontFamily: 'Yu Mincho, serif', color: '#374151' }}>
+                 激しい運動は苦手。でも、何か始めたい
+               </h3>
+                <p className="text-xs leading-relaxed text-left" style={{ fontFamily: 'Hiragino Kaku Gothic, sans-serif', color: '#374151' }}>
+                 汗だくで頑張るよりも、"整える"動きで無理なく変わりたい。<br />ピラティスなら、体の内側から美しく整う感覚が実感できます。
+               </p>
+              </div>
+             </div>
+
+             {/* カード3 */}
+            <div className="bg-white rounded-xl p-6 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex gap-4 border border-gray-100">
+              <div className="flex-shrink-0 flex flex-col items-center gap-3">
+                <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#d2b48c] to-[#c9a87a] flex items-center justify-center shadow-md">
+                  <span className="text-lg font-bold text-white" style={{ fontFamily: 'Arial, sans-serif' }}>3</span>
+                </div>
+                <img 
+                  src="/image/osusume3.png" 
+                  alt="自分時間"
+                  className="w-24 h-24 object-cover rounded-lg shadow-sm"
+                />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-base font-medium mb-5 text-left" style={{ fontFamily: 'Yu Mincho, serif', color: '#374151' }}>
+                 子育ても落ち着き、"自分時間"を取り戻したい
+               </h3>
+                <p className="text-xs leading-relaxed text-left" style={{ fontFamily: 'Hiragino Kaku Gothic, sans-serif', color: '#374151' }}>
+                 家族中心の毎日の中で、少しずつ忘れていた"自分の感覚"。<br />週に数回、静かに心と体に向き合う時間が、心の余裕を取り戻してくれます。
+               </p>
+              </div>
+             </div>
+
+             {/* カード4 */}
+            <div className="bg-white rounded-xl p-6 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex gap-4 border border-gray-100">
+              <div className="flex-shrink-0 flex flex-col items-center gap-3">
+                <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#d2b48c] to-[#c9a87a] flex items-center justify-center shadow-md">
+                  <span className="text-lg font-bold text-white" style={{ fontFamily: 'Arial, sans-serif' }}>4</span>
+                </div>
+                <img 
+                  src="/image/osusume4.png" 
+                  alt="女性専用空間"
+                  className="w-24 h-24 object-cover rounded-lg shadow-sm"
+                />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-base font-medium mb-5 text-left" style={{ fontFamily: 'Yu Mincho, serif', color: '#374151' }}>
+                 女性だけの、安心できる空間で過ごしたい
+               </h3>
+                <p className="text-xs leading-relaxed text-left" style={{ fontFamily: 'Hiragino Kaku Gothic, sans-serif', color: '#374151' }}>
+                 スタジオは女性専用・少人数制。<br />誰かと比べることなく、自分のペースで続けられます。
+               </p>
+              </div>
+             </div>
+
+             {/* カード5 */}
+            <div className="bg-white rounded-xl p-6 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex gap-4 border border-gray-100 md:col-span-2">
+              <div className="flex-shrink-0 flex flex-col items-center gap-3">
+                <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#d2b48c] to-[#c9a87a] flex items-center justify-center shadow-md">
+                  <span className="text-lg font-bold text-white" style={{ fontFamily: 'Arial, sans-serif' }}>5</span>
+                </div>
+                <img 
+                  src="/image/osusume5.png" 
+                  alt="美しく生きる"
+                  className="w-24 h-24 object-cover rounded-lg shadow-sm"
+                />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-base font-medium mb-4 text-left" style={{ fontFamily: 'Yu Mincho, serif', color: '#374151' }}>
+                 年齢を重ねても、美しく、心地よく生きたい
+               </h3>
+                <p className="text-xs leading-relaxed text-left" style={{ fontFamily: 'Hiragino Kaku Gothic, sans-serif', color: '#374151' }}>
+                 姿勢が整うと、表情も明るくなり、日々の動きも軽やかに。<br />"整える時間"が、あなたの暮らしそのものを変えていきます。
+               </p>
+              </div>
+             </div>
+           </div>
+
+           </div>
+
+           {/* 締めコピー */}
+          <p className="text-base md:text-lg leading-relaxed max-w-2xl mx-auto mb-6 text-left px-8" style={{ fontFamily: 'Hiragino Kaku Gothic, sans-serif', color: '#374151' }}>
+               luumは、がんばる女性が「自分を大切にする時間」を取り戻せる場所です。忙しさの中で忘れていた"心地よさ"を、ここで一緒に見つけませんか？
+             </p>
+         
+        </section>
+
+          {/* 店舗紹介セクション */}
+          
+          <section className="bg-white pt-12 md:pt-16 pb-6 md:pb-8 text-center">
+           <div className="text-center mb-6">
+             <p className="text-2xl md:text-3xl font-bold mb-4" style={{ fontFamily: 'Yu Mincho, serif', color: '#d2b48c' }}>
+               2025年12月1日プレオープン！
+             </p>
+           </div>
+           <p className="text-base md:text-lg leading-loose max-w-2xl mx-auto mb-6 text-left px-8" style={{ fontFamily: 'Hiragino Kaku Gothic, sans-serif', color: '#374151' }}>
+             愛知県春日井市にある女性専用マシンピラティススタジオ。40代女性が"自分を整える時間"を取り戻せる特別な空間です。女性専用・少人数制で、水素水飲み放題。美容院との連携でトータルケアも。まずは0円の体験レッスンから。
+           </p>
+         </section>
+
+        {/* TAKE A PILATES LESSON セクション */}
+        <section className="pt-8 md:pt-12 pb-16">
+          {/* 上部：横長画像 */}
+          <div className="w-full mb-0">
+            <img 
+              src="/image/price1.png" 
+              alt="luumスタジオ" 
+              className="w-full h-auto object-cover"
+            />
+          </div>
+
+          {/* 下部：背景画像 + 緑色カバー + コンテンツ */}
+          <div 
+            className="relative w-full h-[500px] bg-cover bg-center flex flex-col items-center justify-center"
+            style={{ backgroundImage: "url('/image/luum12.jpeg')" }}
+          >
+            {/* 緑色の半透明カバー */}
+            <div className="absolute inset-0 bg-[#2C5F4F]/70"></div>
+
+            {/* コンテンツ */}
+            <div className="relative z-10 text-center text-white px-4">
+              <h2 className="text-3xl md:text-4xl font-bold mb-2 tracking-wider" style={{ fontFamily: 'Arial, sans-serif' }}>
+                TAKE A PILATES LESSON
+              </h2>
+              <p className="text-lg md:text-xl mb-8" style={{ fontFamily: 'Yu Mincho, serif' }}>
+              12月1日〜無料体験会開催！
+              </p>
+
+              <p className="text-xl md:text-2xl mb-4" style={{ fontFamily: 'Yu Mincho, serif' }}>
+              体験予約または<br />LINE登録で詳細をお届け。
+              </p>
+              <p className="text-xl md:text-2xl mb-4" style={{ fontFamily: 'Yu Mincho, serif' }}>
+              入会金・事務手数料・施設利用料
+              </p>
+
+              <div className="text-5xl md:text-6xl font-bold mb-8" style={{ fontFamily: 'Arial, sans-serif' }}>
+                \ ¥0 /
+            </div>
+
+              <a 
+                href="/form"
+                className="inline-block bg-gradient-to-b from-[#D4A5A5] to-[#B88888] hover:from-[#C49090] hover:to-[#A67777] text-white font-medium py-4 px-12 rounded-md transition-colors duration-300 text-lg"
+                style={{ fontFamily: 'Yu Mincho, serif' }}
+              >
+                体験レッスンを予約
+              </a>
+            </div>
+          </div>
+        </section>
+
+       
+
+        <section id="pricing" className="bg-white py-8 md:py-16 text-center">
+        <SectionHeader 
+          title={`PRICE`}
+          style={{ fontFamily: 'Hiragino Kaku Gothic, sans-serif', color: '#d2b48c' }}
+          
+        />
+        
+        <p className="text-lg md:text-2xl leading-loose max-w-2xl mb-6 text-center px-8" style={{ fontFamily: 'Yu Mincho, serif', color: '#374151' }}>
+        通いやすい料金プラン
+        </p>
+
+        <p className="text-base text-gray-600 mb-8">※表示価格は全て税込価格になります。</p>
+
+        {/* 料金プランカード */}
+        <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-6 pb-16">
+          
+          {/* プラン1: 通常料金プラン */}
+          <div className="bg-white rounded-2xl shadow-lg overflow-hidden border-2 border-gray-300">
+            {/* ヘッダー */}
+            <div className="bg-gray-600 text-white text-center py-6">
+              <h3 className="text-2xl md:text-3xl font-bold" style={{ fontFamily: 'Hiragino Kaku Gothic, sans-serif' }}>
+                通常料金プラン
+              </h3>
+                  </div>
+
+            {/* コンテンツ */}
+            <div className="p-8">
+              <p className="text-center text-lg mb-6" style={{ fontFamily: 'Yu Mincho, serif', color: '#374151' }}>
+                基本の月会費制
+              </p>
+
+              <div className="text-center mb-6">
+                <p className="text-sm text-gray-600 mb-4">月会費</p>
+
+                <div className="space-y-3 mb-6">
+                  <div className="border-b border-gray-200 pb-2">
+                    <p className="text-xl font-bold" style={{ color: '#374151' }}>月3回</p>
+                    <p className="text-3xl font-bold text-gray-800">¥11,000</p>
+                  </div>
+                  <div className="border-b border-gray-200 pb-2">
+                    <p className="text-xl font-bold" style={{ color: '#374151' }}>月4回</p>
+                    <p className="text-3xl font-bold text-gray-800">¥14,300</p>
+                  </div>
+                  <div className="border-b border-gray-200 pb-2">
+                    <p className="text-xl font-bold" style={{ color: '#374151' }}>通い放題</p>
+                    <p className="text-3xl font-bold text-gray-800">¥20,900</p>
+                </div>
+              </div>
+            </div>
+
+              <div className="border-t border-gray-200 pt-6 mb-6">
+                <p className="text-center text-sm text-gray-600 mb-3">初回のみ以下の初期費用</p>
+                <div className="space-y-1 text-center mb-3">
+                  <p className="text-gray-700 text-sm">入会金 ¥5,500</p>
+                  <p className="text-gray-700 text-sm">事務手数料 ¥5,500</p>
+                  <p className="text-gray-700 text-sm">施設利用料 ¥3,000</p>
+                  </div>
+                <div className="text-center mt-4">
+                  <p className="text-sm text-gray-600">合計</p>
+                  <p className="text-3xl font-bold" style={{ color: '#374151' }}>¥14,000</p>
+                  </div>
+                </div>
+
+              <p className="text-xs text-gray-500 text-center leading-relaxed">
+                対象プラン：全プラン対象<br />
+                ※継続期間の縛りはありません。
+                </p>
+              </div>
+            </div>
+
+          {/* プラン2: 3ヶ月継続プラン */}
+          <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+            {/* ヘッダー */}
+            <div className="bg-[#9B8AC4] text-white text-center py-6">
+              <h3 className="text-2xl md:text-3xl font-bold" style={{ fontFamily: 'Hiragino Kaku Gothic, sans-serif' }}>
+                3ヶ月継続お約束プラン
+              </h3>
+          </div>
+
+            {/* コンテンツ */}
+            <div className="p-8">
+              <p className="text-center text-lg mb-6" style={{ fontFamily: 'Yu Mincho, serif', color: '#374151' }}>
+                初月のご入会で<span className="text-[#9B8AC4] font-bold text-xl">お得</span>にスタート！
+              </p>
+
+              <div className="text-center mb-6">
+                <p className="text-sm text-gray-600 mb-2">通常料金</p>
+                <div className="space-y-1 mb-4">
+                  <p className="text-gray-400 line-through">月3回 ¥11,000</p>
+                  <p className="text-gray-400 line-through">月4回 ¥14,300</p>
+                  <p className="text-gray-400 line-through">通い放題 ¥20,900</p>
+                </div>
+
+                <div className="inline-block bg-[#9B8AC4] text-white px-6 py-2 rounded-full mb-4">
+                  <span className="text-lg font-medium">初月特別価格</span>
+                </div>
+
+                <div className="space-y-2 mb-6">
+                  <p className="text-2xl font-bold" style={{ color: '#374151' }}>月3回 <span className="text-3xl">¥4,400</span></p>
+                  <p className="text-2xl font-bold" style={{ color: '#374151' }}>月4回 <span className="text-3xl">¥5,500</span></p>
+                  <p className="text-2xl font-bold" style={{ color: '#374151' }}>通い放題 <span className="text-3xl">¥8,800</span></p>
+                      </div>
+                      </div>
+
+              <div className="border-t border-gray-200 pt-6 mb-6">
+                <p className="text-center text-sm text-gray-600 mb-3">さらに！</p>
+                <div className="space-y-1 text-center mb-3">
+                  <p className="text-gray-400 line-through text-sm">入会金 ¥5,500</p>
+                  <p className="text-gray-400 line-through text-sm">事務手数料 ¥5,500</p>
+                  <p className="text-gray-400 line-through text-sm">施設利用料 ¥3,000</p>
+                    </div>
+                <div className="text-center mb-4">
+                  <div className="inline-block bg-[#9B8AC4] text-white px-8 py-3 rounded-lg mb-4">
+                    <span className="text-lg font-medium">入会金&事務手数料&施設利用料無料！</span>
+                </div>
+              </div>
+                <div className="text-center">
+                  <p className="text-5xl font-bold mb-2" style={{ color: '#374151' }}>¥0</p>
+            </div>
+          </div>
+
+              {/* お得額の表示 */}
+              <div className="bg-gradient-to-br from-[#FFF9E6] to-[#FFF4D6] border-2 border-[#FFD700] rounded-xl p-6 mb-6 shadow-sm">
+                <p className="text-center text-base font-bold text-[#D2691E] mb-4">🔸 通常料金と比べて...</p>
+                
+                <div className="text-center mb-4">
+                  <p className="text-lg text-gray-700 mb-2">3ヶ月で最大</p>
+                  <p className="text-5xl font-bold text-[#E67E22] mb-2">¥26,100</p>
+                  <p className="text-2xl font-bold text-[#E67E22]">お得！</p>
+                  <p className="text-sm text-gray-600 mt-3">（通い放題プランの場合）</p>
+                </div>
+
+                <div className="border-t border-[#FFD700]/30 pt-4 mt-4">
+                  <p className="text-sm text-gray-700 leading-relaxed text-center mb-3">
+                    入会金・事務手数料・施設利用料<span className="font-bold text-[#E67E22]">0円</span><br />
+                    ムダな初期費用なしで、気軽に始められるプランです。
+                  </p>
+                  <p className="text-xs text-gray-500 leading-relaxed text-left">
+                    3ヶ月間は、あなたが"整う"実感を得るためのお約束期間。
+                    無理なく続けて、しっかり変化を感じましょう。
+                  </p>
+                </div>
+          </div>
+          
+              <p className="text-xs text-gray-500 text-center leading-relaxed">
+                対象プラン：全プラン対象
+              </p>
+            </div>
+        </div>
+        
+          {/* プラン3: 6ヶ月継続プラン */}
+          <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+            {/* ヘッダー */}
+            <div className="bg-[#9B8AC4] text-white text-center py-6">
+              <h3 className="text-2xl md:text-3xl font-bold" style={{ fontFamily: 'Hiragino Kaku Gothic, sans-serif' }}>
+                6ヶ月継続お約束プラン
+              </h3>
+            </div>
+
+            {/* コンテンツ */}
+            <div className="p-8">
+              <p className="text-center text-lg mb-6" style={{ fontFamily: 'Yu Mincho, serif', color: '#374151' }}>
+                <span className="text-[#9B8AC4] font-bold text-xl">お得</span>に継続したい方におすすめ！
+              </p>
+
+              <div className="text-center mb-6">
+                <p className="text-sm text-gray-600 mb-2">通常料金</p>
+                <div className="space-y-1 mb-4">
+                  <p className="text-gray-400 line-through">月3回 ¥11,000</p>
+                  <p className="text-gray-400 line-through">月4回 ¥14,300</p>
+                  <p className="text-gray-400 line-through">通い放題 ¥20,900</p>
+          </div>
+
+                <div className="inline-block bg-[#9B8AC4] text-white px-6 py-2 rounded-full mb-4">
+                  <span className="text-lg font-medium">初月特別価格</span>
+        </div>
+
+                <div className="mb-6">
+                  <p className="text-4xl md:text-5xl font-bold mb-2" style={{ color: '#374151' }}>¥0</p>
+                  <p className="text-base text-gray-600">（全プラン対象）</p>
+                </div>
+
+                <p className="text-sm text-gray-700 mb-4">
+                  2ヶ月目からお好きなプランをお選びいただけます
+                </p>
+
+                <div className="space-y-2 mb-6">
+                  <p className="text-xl font-bold" style={{ color: '#374151' }}>月3回 ¥11,000</p>
+                  <p className="text-xl font-bold" style={{ color: '#374151' }}>月4回 ¥14,300</p>
+                  <p className="text-xl font-bold" style={{ color: '#374151' }}>通い放題 ¥20,900</p>
+              </div>
+                </div>
+
+              <div className="border-t border-gray-200 pt-6 mb-6">
+                <p className="text-center text-sm text-gray-600 mb-3">さらに！</p>
+                <div className="space-y-1 text-center mb-3">
+                  <p className="text-gray-400 line-through text-sm">入会金 ¥5,500</p>
+                  <p className="text-gray-400 line-through text-sm">事務手数料 ¥5,500</p>
+                  <p className="text-gray-400 line-through text-sm">施設利用料 ¥3,000</p>
+              </div>
+                <div className="text-center mb-4">
+                  <div className="inline-block bg-[#9B8AC4] text-white px-8 py-3 rounded-lg mb-4">
+                    <span className="text-lg font-medium">入会金&事務手数料&施設利用料無料！</span>
+                </div>
+              </div>
+                <div className="text-center">
+                  <p className="text-5xl font-bold mb-2" style={{ color: '#374151' }}>¥0</p>
+            </div>
+              </div>
+
+              {/* お得額の表示 */}
+              <div className="bg-gradient-to-br from-[#FFF9E6] to-[#FFF4D6] border-2 border-[#FFD700] rounded-xl p-6 mb-6 shadow-sm">
+                <p className="text-center text-base font-bold text-[#D2691E] mb-4">🔸 通常料金と比べて...</p>
+                
+                <div className="text-center mb-4">
+                  <p className="text-lg text-gray-700 mb-2">6ヶ月で最大</p>
+                  <p className="text-5xl font-bold text-[#E67E22] mb-2">¥34,900</p>
+                  <p className="text-2xl font-bold text-[#E67E22]">お得！</p>
+                  <p className="text-sm text-gray-600 mt-3">（通い放題プランの場合）</p>
+              </div>
+
+                <div className="border-t border-[#FFD700]/30 pt-4 mt-4">
+                  <p className="text-sm text-gray-700 leading-relaxed text-center mb-3">
+                    初月は<span className="font-bold text-[#E67E22]">無料</span>で体験。<br />
+                    2ヶ月目から、自分に合ったペースでプランを選べます。
+                  </p>
+                  <p className="text-xs text-gray-500 leading-relaxed text-left">
+                    まずはお試し → 続けながら変わるを叶える
+                    今だけのオープン記念キャンペーンです。
+                  </p>
+            </div>
+          </div>
+
+              <p className="text-xs text-gray-500 text-center leading-relaxed">
+                対象プラン：全プラン対象
+              </p>
+          </div>
+    </div>
     
   </div>
+
 </section>
 
-
-
-      <RequirementSection />
-
-      <section className="py-16 md:py-24" id="qa" ref={qaRef}>
+        <section id="faq" className="bg-white py-8 md:py-16">
+        <div className="text-center mb-12">
         <SectionHeader 
-          title="よくあるご質問"
-          subtitle="Q&A"
-        />
-        <div className="max-w-6xl mx-auto px-4">
+            title={`FAQ`}
+            style={{ fontFamily: 'Hiragino Kaku Gothic, sans-serif', color: '#d2b48c' }}
+          />
+          <p className="text-lg md:text-2xl leading-loose max-w-2xl mx-auto mb-6 px-8" style={{ fontFamily: 'Yu Mincho, serif', color: '#374151' }}>
+            よくある質問
+          </p>
+        </div>
+
+        <div className="max-w-4xl mx-auto px-4">
           <div className="space-y-4">
             {[
               {
-                question: "スタッフの年齢はどのくらいですか？",
-                answer: "店舗によってもかわりますが平均年齢25歳くらいの若い層が活躍しているサロンです。みんな仲良く推し活頑張ってます！"
+                question: "トライアルレッスンを受講したいのですが、どうすればいいですか？",
+                answer: "レッスンは全て予約制となっております。\n予約フォームからご予約が可能です。「体験する店舗を探す」よりお進みください。\nお電話でのご予約も承っております。\nTEL：0570-050-055\n電話受付時間：平日・土日祝 9:00〜18:00"
               },
               {
-                question: "お客様の年齢層は？",
-                answer: "20-30代がメイン層になります！カラー好きなスタッフが多くカラー比率は70%以上！髪質改善などのケア系カラーはもちろんですがデザインカラーも豊富です！"
+                question: "友達と一緒にトライアルレッスンを受けたいのですが、可能ですか？",
+                answer: "もちろん可能です。WEBからご予約をいただく場合は、一名様ずつトライアルレッスンのお申込みをお願い致します。\nお電話の場合は、代表者様からご連絡をいただく事で一度にご予約が可能です。ご予約を希望されるお客様のお名前・お電話番号・生年月日をお伝えください。"
               },
               {
-                question: "採用までの流れはどんな感じですか？",
-                answer: "まずサロン見学に来て下さい！オーナーの永田が1人ずつしっかりお話しさせて頂きます。会社の考え方、理念などにしっかり共感できる方のみ採用させて頂きます。"
+                question: "トライアルレッスンの持ち物は何ですか？",
+                answer: "トライアルレッスンは上下ウェアがレンタルに含まれます。\n必要に応じて下記のものをご用意ください。\n\n【レッスン】\n・靴下（レッスン中は靴下着用必須となります。当スタジオオリジナルのすべり止め付きソックスも店頭で販売しております）\n・汗拭きタオル\n・水分補給用の飲料（お水をお勧めします）\n\n【ご入会手続き】\n・現金、クレジットカード（月会費、施設利用料、施設維持費の前納金分）\n・キャッシュカードもしくは口座情報のわかる物\n・身分証明書（免許書、保険証、パスポート、マイナンバーカード等）\n\nトライアルレッスン当日限定でご入会キャンペーンをご利用いただけます！\n当日のお支払いにつきましてはご利用のキャンペーン、コースによって異なります。"
               },
-              
-            ].map((qa, index) => (
+              {
+                question: "トライアルレッスンは何分前に行けばよいですか？",
+                answer: "レッスン開始25分前にご来店いただき、簡単な体調チェックや館内説明がございます。\nレッスン終了後は、お着替え、レッスンのご案内やお手続きなども含めてお帰りまで約2時間程度お時間を見ていただいております。"
+              },
+              {
+                question: "トライアルレッスン当日はどれくらい時間が必要ですか？",
+                answer: "レッスン開始25分前にご来店いただき、簡単な体調チェックや館内説明がございます。\nレッスン終了後は、お着替え、レッスンのご案内やお手続きなども含めてお帰りまで約2時間程度お時間を見ていただいております。"
+              },
+              {
+                question: "トライアルレッスンを2回以上利用することはできますか？",
+                answer: "恐れ入りますが、トライアルレッスンを受講できるのは一名様につき1回限りとさせていただいております。\n2回目以降のご利用には入会手続きが必要となります。ご入会を検討されている方はご入会希望店舗にてトライアルレッスンのご予約・ご来店をお願いいたします。"
+              }
+            ].map((faq, index) => (
               <details 
                 key={index} 
-                className={`bg-white p-6 rounded-lg shadow-sm group transition-all duration-500 ease-out hover:shadow-md ${
-                  qaInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-                }`}
-                style={{ transitionDelay: `${index * 150}ms` }}
+                className="border-l-2 group"
+                style={{ borderColor: '#d2b48c' }}
               >
-                <summary className="text-lg md:text-xl font-medium cursor-pointer list-none flex justify-between items-center text-gray-800">
-                  <span className="flex items-center gap-3">
-                    <span className="text-[#D3B58D]">Q.</span>
-                    {qa.question}
+                <summary className="pl-6 pr-4 py-4 cursor-pointer list-none flex justify-between items-start text-left hover:bg-gray-50 transition-colors">
+                  <span className="text-base md:text-lg text-gray-800 pr-4" style={{ fontFamily: 'Hiragino Kaku Gothic, sans-serif' }}>
+                    {faq.question}
                   </span>
-                  <span className="transform group-open:rotate-180 transition-transform duration-300 text-[#D3B58D]">
+                  <span className="transform group-open:rotate-180 transition-transform duration-300 flex-shrink-0 mt-1" style={{ color: '#d2b48c' }}>
                     ▼
                   </span>
                 </summary>
-                <div className="mt-4 pl-6 text-gray-600 leading-relaxed">
-                  <span className="text-[#D3B58D] font-medium">A.</span>
-                  <span className="ml-2">{qa.answer}</span>
+                <div className="pl-6 pr-4 pb-4 pt-2 text-gray-600 text-sm md:text-base leading-relaxed">
+                  {faq.answer.split('\n').map((line, i) => (
+                    <React.Fragment key={i}>
+                      {line}
+                      {i < faq.answer.split('\n').length - 1 && <br />}
+                    </React.Fragment>
+                  ))}
                 </div>
               </details>
             ))}
           </div>
-          
-          
         </div>
+
       </section>
 
-      <section className="py-12 md:py-24 bg-gradient-to-r from-[#D3B58D]/10 to-[#D3B58D]/5" id="owner-message-title" ref={ownerRef}>
-        <SectionHeader 
-          title="オーナー挨拶"
-          subtitle="Message from Owner"
-        />
-        <div className="max-w-5xl mx-auto px-4 sm:px-6">
-          <div className="bg-white p-6 md:p-12 rounded-lg shadow-lg">
-            <div className="flex flex-col md:flex-row gap-6 md:gap-12">
-              <div className="md:w-1/3 flex flex-col items-center text-center">
-                <div className="w-40 h-40 md:w-64 md:h-64 overflow-hidden rounded-full border-4 border-white shadow-md mb-4">
-                  <Image
-                    src="/image/nagata.jpg"
-                    alt="オーナーの写真"
-                    width={500}
-                    height={500}
-                    className="w-full h-full object-cover"
-                    priority
-                  />
-                </div>
-                <h3 className="text-xl font-bold mb-1">オーナー</h3>
-                <p className="text-gray-600 mb-6 md:mb-0">永田</p>
-              </div>
-              
-              <div className="md:w-2/3">
-                <div className="prose prose-sm md:prose-lg max-w-none">
-                  <p className="space-y-4 md:space-y-6">
-                    <span id="owner-message-start" className="block mb-4 md:mb-6 text-gray-800 text-base md:text-lg leading-relaxed">
-                      皆さま、こんにちは。名古屋で「mallow」「re'll」「mallow eve」の3店舗を運営しております、オーナーの永田です。この度は、私たちのサロンにご興味を持っていただき、ありがとうございます。 私たちのサロンは、ただの美容院ではなく、スタッフ一人ひとりの「なりたい」「やりたい」を叶えられる場所でありたいと考えています。ここでは、お客様に最高の美容体験を提供することはもちろんですが、スタッフが自分らしく、そして充実した仕事をしていける環境を整えることを何より大切にしています。 
-                    </span>
-
-                    <span className="block mb-4 md:mb-6 text-gray-800 text-base md:text-lg leading-relaxed">
-                      「美容師として技術を磨きたい」「もっとクリエイティブな仕事がしたい」「ライフスタイルに合わせた働き方がしたい」「美容師以外にも興味がある」
-                      — そんな思いを持った方にこそ、私たちのサロンはぴったりの場所だと自負しています。私たちは、スタッフ一人ひとりの成長を全力でサポートし、それぞれが持つ個性を活かして活躍できる環境を提供します。 
-                    </span>
-
-                    <span className="block mb-4 md:mb-6 text-gray-800 text-base md:text-lg leading-relaxed">
-                      また、働き方についても、柔軟な選択肢を大切にしています。フルタイム勤務だけでなく、時短勤務やパートタイム、託児所(mallow kids)を併設しているので、お子さんを預けて働くこともできます！
-                      スタッフが自分のペースで働き、仕事とプライベートのバランスを取りながら、キャリアを築いていける環境を整えているので、どんな希望にも柔軟に対応できるように努めています。
-                    </span>
-s
-                    <span className="block mb-4 md:mb-6 text-gray-800 text-base md:text-lg leading-relaxed">
-                      さらに、当サロンでは技術だけではなく、人間力の向上も大切にしています。お客様に感動を与える美容師であり続けるために、日々学びながら成長できるチャンスがあります。
-                      例えば、定期的な勉強会やワークショップ、そしてスタッフ同士での交流を通じて、技術だけでなく、サロン内でのコミュニケーション力やチームワークも高めていきます。
-                    </span>
-
-                    <span className="block mb-4 md:mb-6 text-gray-800 text-base md:text-lg leading-relaxed">
-                      私たちのサロンで働くということは、美容師としてだけでなく、一人の人間としても成長できるチャンスに満ちています。あなたの「なりたい自分」を実現し、共に成長していける場所がここにあります。 もし、少しでも興味を持っていただけたのであれば、ぜひ一度、サロンに足を運んでいただければと思います。お話を聞かせていただき、あなたが持つビジョンや目標にどう応えていけるか、一緒に考えていきたいと考えています。
-                    </span>
-                  </p>
-                </div>
-                
-                
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <footer className="bg-[#333] text-white py-8 md:py-16 px-4">
+      <footer className="bg-[#333] text-white py-8 md:py-16 px-4 pb-28 md:pb-32">
         <div className="max-w-6xl mx-auto">
           
           <div className="grid md:grid-cols-2 gap-6 md:gap-8">
@@ -1130,73 +1158,25 @@ s
                     className="flex items-center hover:text-[#4a90e2] transition-colors"
                   >
                     <i className="fab fa-instagram text-xl mr-2"></i>
-                    <span className="text-sm">mallow公式</span>
+                    <span className="text-sm">luum公式</span>
                   </a>
                   
-                  <a 
-                    href="https://www.instagram.com/rell_hair.flower?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    className="flex items-center hover:text-[#4a90e2] transition-colors"
-                  >
-                    <i className="fab fa-instagram text-xl mr-2"></i>
-                    <span className="text-sm">re'll公式</span>
-                  </a>
                   
-                  <a 
-                    href="https://www.instagram.com/mallow_eve_hair.flower?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    className="flex items-center hover:text-[#4a90e2] transition-colors"
-                  >
-                    <i className="fab fa-instagram text-xl mr-2"></i>
-                    <span className="text-sm">mallow eve公式</span>
-                  </a>
                   
-                  <a 
-                    href="https://www.instagram.com/mallow_nagata/" 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    className="flex items-center hover:text-[#4a90e2] transition-colors"
-                  >
-                    <i className="fab fa-instagram text-xl mr-2"></i>
-                    <span className="text-sm">代表永田</span>
-                  </a>
+                  
                 </div>
               </div>
             </div>
             <div>
               <h3 className="text-xl mb-4">店舗情報</h3>
-              <div className="mb-4 relative group">
-                <Image
-                  src="/image/zentai.jpg"
-                  alt="店舗外観"
-                  width={500}
-                  height={300}
-                  className="w-full h-auto rounded-lg"
-                />
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg flex items-center justify-center">
-                  <a 
-                    href="https://salonjobs.hairbook.jp/salons/43562/" 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    className="bg-[#FF9E81] text-white px-6 py-2 rounded-full hover:bg-[#FF8A69] transition duration-300 text-base transform scale-90 group-hover:scale-100"
-                  >
-                    サロン詳細を見る
-                  </a>
-                </div>
-              </div>
-              <p>住所：〒460-0002 愛知県名古屋市中区丸の内2-19-19丸の内ヒルズ3F</p>
-              <p>電話：052-253-8467</p>
-              <p>営業時間：
-                <br />※最終受付時間となります。
-                <br />【火～土】10:00～20:00
-                <br />【日】10:00～18:00
-              </p>
-              <p>定休日：月曜日</p>
+               
+                 
+              <p>住所：〒486-0849 愛知県春日井市八田町７－１－１３エイトプラット</p>
+              <p>営業時間：9:30〜21:00</p>
+              <p>定休日：不定休</p>
               <div className="mt-4 w-full h-[300px] md:h-[400px]">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6522.638920676156!2d136.9003495!3d35.173589500000006!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x600377415f82e4db%3A0xac398137b617330a!2smallow!5e0!3m2!1sja!2sjp!4v1743846532357!5m2!1sja!2sjp"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3258.078199829464!2d136.96784387576872!3d35.254310272728034!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6003730079a4c85d%3A0x8f9183e8a652c9b9!2zRWlHSFQgUExhVCBLQVNVR0FJKOOCqOOCpOODiOODl-ODqeODg-ODiOaYpeaXpeS6lSk!5e0!3m2!1sja!2sjp!4v1761116618009!5m2!1sja!2sjp"
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}
@@ -1226,14 +1206,38 @@ s
 
       {/* 画面下部固定CTA（ファーストビュー80%過ぎたら表示） */}
       {showFixedCTA && (
-        <div className="fixed bottom-0 left-0 w-full z-50">
+        <div className="fixed bottom-0 left-0 w-full z-50 bg-white shadow-lg">
+          <div className="flex">
+            {/* 体験予約ボタン */}
           <Link
-            href="/contact"
-            className="bg-[#e24a4a] text-white text-center text-base font-bold py-4 w-full block rounded-none hover:bg-[#bd3535] transition duration-300"
-            style={{ boxShadow: '0 -2px 8px rgba(0,0,0,0.08)' }}
-          >
-            美容師＆保育士<br />お問い合わせはこちら
+              href="/form"
+              className="flex-1 bg-gradient-to-b from-[#D4A5A5] to-[#B88888] text-white text-center py-4 hover:from-[#C49090] hover:to-[#A67777] transition duration-300 flex flex-col items-center justify-center"
+            >
+              <div className="flex items-center justify-center mb-1">
+                <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
+                </svg>
+                <span className="text-xs font-medium tracking-wider">TRIAL</span>
+              </div>
+              <span className="text-base font-bold">体験予約</span>
           </Link>
+
+            {/* LINE登録ボタン */}
+            <a
+              href="https://line.me/R/ti/p/@YOUR_LINE_ID"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1 bg-white text-gray-700 border-l border-gray-200 text-center py-4 hover:bg-gray-50 transition duration-300 flex flex-col items-center justify-center"
+            >
+              <div className="flex items-center justify-center mb-1">
+                <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M19 2H5C3.346 2 2 3.346 2 5v14c0 1.654 1.346 3 3 3h14c1.654 0 3-1.346 3-3V5c0-1.654-1.346-3-3-3zm-7 15c-3.866 0-7-2.462-7-5.5S8.134 6 12 6s7 2.462 7 5.5-3.134 5.5-7 5.5z"/>
+                </svg>
+                <span className="text-xs font-medium tracking-wider">LINE</span>
+              </div>
+              <span className="text-base font-bold">登録</span>
+            </a>
+          </div>
         </div>
       )}
     </div>

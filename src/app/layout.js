@@ -4,8 +4,8 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
-  title: 'mallow -花屋併設の美容室',
-  description: 'mallowの求人サイトです',
+  title: 'luum -心と体を整える空間',
+  description: 'luumのサイトです',
 }
 
 export default function RootLayout({ children }) {

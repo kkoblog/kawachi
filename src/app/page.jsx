@@ -374,11 +374,9 @@ function MainComponent() {
         <div className="flex items-center justify-between px-4 py-4">
           {/* 左側：ロゴ */}
           <div className="flex-shrink-0">
-            <img
-              src="/image/logo.png"
-              alt="luum"
-              className="h-10 w-auto"
-            />
+            <span className="text-2xl font-medium" style={{ fontFamily: 'Yu Mincho, serif', color: '#374151' }}>
+              luum
+            </span>
           </div>
           
           {/* 右側：ハンバーガーメニュー */}
@@ -470,34 +468,36 @@ function MainComponent() {
       </div>
 
       {/* 動画下にテキストを移動 */}
-      <section className="bg-white py-8 md:py-16 px-4 text-center">
+      <section className="bg-white py-8 md:py-16 px-4 text-left">
         <p className="text-2xl md:text-3xl font-bold mb-6 text-center" style={{ fontFamily: 'Yu Mincho, serif' }}>
-          整うコトで、全てが変わる。
+        本来のあなたへ。
         </p>
-        <p className="text-lg md:text-2xl leading-loose max-w-2xl mb-6 text-center" style={{ fontFamily: 'Hiragino Kaku Gothic, sans-serif', color: '#374151' }}>
-          家族を優先してきたあなたへ。<br />
-          今度は、自分を整える番です。<br /><br />
-          luumは、心と体を整えながら、<br />
-          本来の美しさを育てていける場所。
+        <p className="text-lg md:text-2xl leading-loose max-w-2xl mb-6 text-text-left px-8" style={{ fontFamily: 'Hiragino Kaku Gothic, sans-serif', color: '#374151' }}>
+          luum は、日々の中で少しずつ積み重ねた
+          "緊張"をほどき、本来のあなたらしさと
+          美しさを取り戻すための場所です。<br /><br />
+          呼吸が深まるたび、心も、体も、<br />
+          そして生き方までも整っていく。
         </p>
         
       </section>
 
       <section className="bg-white py-8 md:py-16 text-center">
         <SectionHeader 
-          title={`子育てが落ち着いても、\n"満たされない"理由がわからない`}
+          title={`何気ない毎日の中で、\n見過ごしている自分のサイン`}
           style={{ fontFamily: 'Yu Mincho, serif', color: '#374151' }}
           showLine={false}
         />
         <div className="w-full">
           <div className="flex justify-center">
             <img 
-              src="/image/nayami1.png" 
+              src="/image/nayami2.png" 
               alt="悩みの画像"
               className="w-full h-auto"
             />
           </div>
         </div>
+        
       </section>
 
       <section className="bg-white py-8 md:py-16 text-center">
@@ -562,10 +562,7 @@ function MainComponent() {
           <ul className="space-y-3 text-base md:text-lg leading-loose text-left" style={{ fontFamily: 'Hiragino Kaku Gothic, sans-serif', color: '#374151' }}>
             <li className="flex items-start">
               
-              <span className="text-left" style={{ color: '#374151' }}>最大8名までの少人数制。
-大手スタジオのように流れ作業ではなく、
-講師が一人ひとりの身体の癖や状態を丁寧にサポート。
-"無理なく整う"実感が、続けるほどに深まります。</span>
+              <span className="text-left" style={{ color: '#374151' }}>最大8名までの少人数制。大手スタジオのように流れ作業ではなく、講師が一人ひとりの身体の癖や状態を丁寧にサポート。"無理なく整う"実感が、続けるほどに深まります。</span>
             </li>
             
           </ul>
@@ -588,10 +585,7 @@ function MainComponent() {
           <ul className="space-y-3 text-base md:text-lg leading-loose text-left" style={{ fontFamily: 'Hiragino Kaku Gothic, sans-serif', color: '#374151' }}>
             <li className="flex items-start">
               
-              <span className="text-left" style={{ color: '#374151' }}>美容室を運営してきた私たちがこだわった、
-女性のための美しい内装と居心地。
-「自分のための時間」を過ごす場所として、
-通うたびに心が整い、気分が上がるスタジオです。</span>
+              <span className="text-left" style={{ color: '#374151' }}>美容室を運営してきた私たちがこだわった、女性のための美しい内装と居心地。「自分のための時間」を過ごす場所として、通うたびに心が整い、美意識が高まるサロンです。</span>
             </li>
             
           </ul>
@@ -614,9 +608,7 @@ function MainComponent() {
           <ul className="space-y-3 text-base md:text-lg leading-loose text-left" style={{ fontFamily: 'Hiragino Kaku Gothic, sans-serif', color: '#374151' }}>
             <li className="flex items-start">
               
-              <span className="text-left" style={{ color: '#374151' }}>水素水が飲み放題で、身体の内側からも美しく。
-さらに、美容院との連携でヘアケアや美容商材も体験可能。
-外側と内側、両方から「整える」を叶えます。</span>
+              <span className="text-left" style={{ color: '#374151' }}>身体を内側から綺麗にする為に水素水は飲み放題です。身体の内側からも美しく。さらに、美容院との連携でヘアケアや美容商材も体験可能。外側と内側、両方から「整える」を叶えます。</span>
             </li>
             
           </ul>
@@ -640,7 +632,7 @@ function MainComponent() {
            
          />
          <p className="text-lg md:text-2xl leading-loose max-w-2xl mb-6 text-left px-8" style={{ fontFamily: 'Yu Mincho, serif', color: '#374151' }}>
-         家族のために頑張ってきたけれど、そろそろ“自分のための時間”も大切にしたい。そんな40代女性のあなたへ。
+         家族のために頑張ってきたけれど、そろそろ“自分のための時間”も大切にしたい。そんな大人女性のあなたへ。
         </p>
          
          <div className="max-w-6xl mx-auto px-4">
@@ -760,7 +752,7 @@ function MainComponent() {
 
            {/* 締めコピー */}
           <p className="text-base md:text-lg leading-relaxed max-w-2xl mx-auto mb-6 text-left px-8" style={{ fontFamily: 'Hiragino Kaku Gothic, sans-serif', color: '#374151' }}>
-               luumは、がんばる女性が「自分を大切にする時間」を取り戻せる場所です。忙しさの中で忘れていた"心地よさ"を、ここで一緒に見つけませんか？
+               luumは、全ての女性が「自分を大切にする時間」を取り戻せる場所です。忙しさの中で忘れていた"心地よさ"を、ここで一緒に見つけませんか？
              </p>
          
         </section>
@@ -774,7 +766,7 @@ function MainComponent() {
              </p>
            </div>
            <p className="text-base md:text-lg leading-loose max-w-2xl mx-auto mb-6 text-left px-8" style={{ fontFamily: 'Hiragino Kaku Gothic, sans-serif', color: '#374151' }}>
-             愛知県春日井市にある女性専用マシンピラティススタジオ。40代女性が"自分を整える時間"を取り戻せる特別な空間です。女性専用・少人数制で、水素水飲み放題。美容院との連携でトータルケアも。まずは0円の体験レッスンから。
+             愛知県春日井市にある女性専用マシンピラティススタジオ。全ての女性が"自分を整える時間"を取り戻せる特別な空間です。女性専用・少人数制で、水素水飲み放題。美容院との連携でトータルケアも。まずは0円の体験レッスンから。
            </p>
          </section>
 
@@ -794,26 +786,26 @@ function MainComponent() {
             className="relative w-full h-[500px] bg-cover bg-center flex flex-col items-center justify-center"
             style={{ backgroundImage: "url('/image/luum12.jpeg')" }}
           >
-            {/* 緑色の半透明カバー */}
-            <div className="absolute inset-0 bg-[#2C5F4F]/70"></div>
+            {/* ベージュ系の半透明カバー */}
+            <div className="absolute inset-0 bg-[#ede4e1]/70"></div>
 
             {/* コンテンツ */}
             <div className="relative z-10 text-center text-white px-4">
-              <h2 className="text-3xl md:text-4xl font-bold mb-2 tracking-wider" style={{ fontFamily: 'Arial, sans-serif' }}>
+              <h2 className="text-3xl md:text-4xl font-bold mb-6 tracking-wider" style={{ fontFamily: 'Arial, sans-serif', textShadow: '2px 2px 8px rgba(0, 0, 0, 0.8)' }}>
                 TAKE A PILATES LESSON
               </h2>
-              <p className="text-lg md:text-xl mb-8" style={{ fontFamily: 'Yu Mincho, serif' }}>
+              <p className="text-lg md:text-xl mb-8" style={{ fontFamily: 'Hiragino Kaku Gothic', textShadow: '2px 2px 6px rgba(0, 0, 0, 0.8)' }}>
               12月1日〜無料体験会開催！
               </p>
 
-              <p className="text-xl md:text-2xl mb-4" style={{ fontFamily: 'Yu Mincho, serif' }}>
+              <p className="text-xl md:text-2xl mb-4" style={{ fontFamily: 'Hiragino Kaku Gothic', textShadow: '2px 2px 6px rgba(0, 0, 0, 0.8)' }}>
               体験予約または<br />LINE登録で詳細をお届け。
               </p>
-              <p className="text-xl md:text-2xl mb-4" style={{ fontFamily: 'Yu Mincho, serif' }}>
+              <p className="text-xl md:text-2xl mb-4" style={{ fontFamily: 'Hiragino Kaku Gothic', textShadow: '2px 2px 6px rgba(0, 0, 0, 0.8)' }}>
               入会金・事務手数料・施設利用料
               </p>
 
-              <div className="text-5xl md:text-6xl font-bold mb-8" style={{ fontFamily: 'Arial, sans-serif' }}>
+              <div className="text-5xl md:text-6xl font-bold mb-8" style={{ fontFamily: 'Arial, sans-serif', textShadow: '2px 2px 10px rgba(0, 0, 0, 0.9)' }}>
                 \ ¥0 /
             </div>
 
@@ -824,6 +816,16 @@ function MainComponent() {
               >
                 体験レッスンを予約
               </a>
+              
+              <div className="mt-4">
+                <a 
+                  href="/experience-flow"
+                  className="text-white underline hover:no-underline transition-all duration-300 text-base"
+                  style={{ fontFamily: 'Hiragino Kaku Gothic', textShadow: '1px 1px 4px rgba(0, 0, 0, 0.8)' }}
+                >
+                  体験の流れはこちら ▶︎▶︎▶︎
+                </a>
+              </div>
             </div>
           </div>
         </section>
@@ -903,7 +905,7 @@ function MainComponent() {
           {/* プラン2: 3ヶ月継続プラン */}
           <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
             {/* ヘッダー */}
-            <div className="bg-[#9B8AC4] text-white text-center py-6">
+            <div className="bg-[#d2b48c] text-white text-center py-6">
               <h3 className="text-2xl md:text-3xl font-bold" style={{ fontFamily: 'Hiragino Kaku Gothic, sans-serif' }}>
                 3ヶ月継続お約束プラン
               </h3>
@@ -912,7 +914,7 @@ function MainComponent() {
             {/* コンテンツ */}
             <div className="p-8">
               <p className="text-center text-lg mb-6" style={{ fontFamily: 'Yu Mincho, serif', color: '#374151' }}>
-                初月のご入会で<span className="text-[#9B8AC4] font-bold text-xl">お得</span>にスタート！
+                初月のご入会で<span className="text-[#d2b48c] font-bold text-xl">お得</span>にスタート！
               </p>
 
               <div className="text-center mb-6">
@@ -923,7 +925,7 @@ function MainComponent() {
                   <p className="text-gray-400 line-through">通い放題 ¥20,900</p>
                 </div>
 
-                <div className="inline-block bg-[#9B8AC4] text-white px-6 py-2 rounded-full mb-4">
+                <div className="inline-block bg-[#d2b48c] text-white px-6 py-2 rounded-full mb-4">
                   <span className="text-lg font-medium">初月特別価格</span>
                 </div>
 
@@ -942,7 +944,7 @@ function MainComponent() {
                   <p className="text-gray-400 line-through text-sm">施設利用料 ¥3,000</p>
                     </div>
                 <div className="text-center mb-4">
-                  <div className="inline-block bg-[#9B8AC4] text-white px-8 py-3 rounded-lg mb-4">
+                  <div className="inline-block bg-[#d2b48c] text-white px-8 py-3 rounded-lg mb-4">
                     <span className="text-lg font-medium">入会金&事務手数料&施設利用料無料！</span>
                 </div>
               </div>
@@ -983,7 +985,7 @@ function MainComponent() {
           {/* プラン3: 6ヶ月継続プラン */}
           <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
             {/* ヘッダー */}
-            <div className="bg-[#9B8AC4] text-white text-center py-6">
+            <div className="bg-[#d2b48c] text-white text-center py-6">
               <h3 className="text-2xl md:text-3xl font-bold" style={{ fontFamily: 'Hiragino Kaku Gothic, sans-serif' }}>
                 6ヶ月継続お約束プラン
               </h3>
@@ -992,7 +994,7 @@ function MainComponent() {
             {/* コンテンツ */}
             <div className="p-8">
               <p className="text-center text-lg mb-6" style={{ fontFamily: 'Yu Mincho, serif', color: '#374151' }}>
-                <span className="text-[#9B8AC4] font-bold text-xl">お得</span>に継続したい方におすすめ！
+                <span className="text-[#d2b48c] font-bold text-xl">お得</span>に継続したい方におすすめ！
               </p>
 
               <div className="text-center mb-6">
@@ -1003,7 +1005,7 @@ function MainComponent() {
                   <p className="text-gray-400 line-through">通い放題 ¥20,900</p>
           </div>
 
-                <div className="inline-block bg-[#9B8AC4] text-white px-6 py-2 rounded-full mb-4">
+                <div className="inline-block bg-[#d2b48c] text-white px-6 py-2 rounded-full mb-4">
                   <span className="text-lg font-medium">初月特別価格</span>
         </div>
 
@@ -1031,7 +1033,7 @@ function MainComponent() {
                   <p className="text-gray-400 line-through text-sm">施設利用料 ¥3,000</p>
               </div>
                 <div className="text-center mb-4">
-                  <div className="inline-block bg-[#9B8AC4] text-white px-8 py-3 rounded-lg mb-4">
+                  <div className="inline-block bg-[#d2b48c] text-white px-8 py-3 rounded-lg mb-4">
                     <span className="text-lg font-medium">入会金&事務手数料&施設利用料無料！</span>
                 </div>
               </div>
@@ -1097,11 +1099,11 @@ function MainComponent() {
               },
               {
                 question: "トライアルレッスンの持ち物は何ですか？",
-                answer: "トライアルレッスンは上下ウェアがレンタルに含まれます。\n必要に応じて下記のものをご用意ください。\n\n【レッスン】\n・靴下（レッスン中は靴下着用必須となります。当スタジオオリジナルのすべり止め付きソックスも店頭で販売しております）\n・汗拭きタオル\n・水分補給用の飲料（お水をお勧めします）\n\n【ご入会手続き】\n・現金、クレジットカード（月会費、施設利用料、施設維持費の前納金分）\n・キャッシュカードもしくは口座情報のわかる物\n・身分証明書（免許書、保険証、パスポート、マイナンバーカード等）\n\nトライアルレッスン当日限定でご入会キャンペーンをご利用いただけます！\n当日のお支払いにつきましてはご利用のキャンペーン、コースによって異なります。"
+                answer: "下記のものをご用意ください。\n\n【レッスン】\n・靴下（レッスン中は靴下着用必須となります。当スタジオオリジナルのすべり止め付きソックスも店頭で販売しております）\n・汗拭きタオル\n・水分補給用の飲料（お水をお勧めします）\n\n【ご入会手続き】\n・現金、クレジットカード（月会費、施設利用料、施設維持費の前納金分）\n・キャッシュカードもしくは口座情報のわかる物\n・身分証明書（免許書、保険証、パスポート、マイナンバーカード等）\n\nトライアルレッスン当日限定でご入会キャンペーンをご利用いただけます！\n当日のお支払いにつきましてはご利用のキャンペーン、コースによって異なります。"
               },
               {
                 question: "トライアルレッスンは何分前に行けばよいですか？",
-                answer: "レッスン開始25分前にご来店いただき、簡単な体調チェックや館内説明がございます。\nレッスン終了後は、お着替え、レッスンのご案内やお手続きなども含めてお帰りまで約2時間程度お時間を見ていただいております。"
+                answer: "レッスン開始10分前にご来店いただき、簡単な体調チェックや館内説明がございます。\nレッスン終了後は、お着替え、レッスンのご案内やお手続きなども含めてお帰りまで約2時間程度お時間を見ていただいております。"
               },
               {
                 question: "トライアルレッスン当日はどれくらい時間が必要ですか？",
@@ -1152,7 +1154,7 @@ function MainComponent() {
               <div className="flex flex-col space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <a 
-                    href="https://www.instagram.com/mallow_hair.flower?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" 
+                    href="https://www.instagram.com/lZDc0MzIxNw==" 
                     target="_blank" 
                     rel="noopener noreferrer" 
                     className="flex items-center hover:text-[#4a90e2] transition-colors"

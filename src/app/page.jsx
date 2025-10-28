@@ -179,6 +179,10 @@ function MainComponent() {
   const [showScrollTop, setShowScrollTop] = useState(false);
   // 追従CTA表示制御用state
   const [showFixedCTA, setShowFixedCTA] = useState(false);
+  // ローディングアニメーション制御用state
+  const [showLoading, setShowLoading] = useState(true);
+  const [loadingStep, setLoadingStep] = useState(1); // 1: 最初のテキスト, 2: luumテキスト
+  const [fadeOutLoading, setFadeOutLoading] = useState(false);
 
   // 各セクションのIntersectionObserverを設定
   const [conceptRef, conceptInView] = useInView({
@@ -206,6 +210,35 @@ function MainComponent() {
     threshold: 0.2,
     rootMargin: '-50px'
   });
+
+  // ローディングアニメーションのタイミング制御
+  useEffect(() => {
+    // ローディング中はスクロールを無効化
+    document.body.style.overflow = 'hidden';
+
+    // 最初のテキスト表示（2秒）
+    const timer1 = setTimeout(() => {
+      setLoadingStep(2);
+    }, 2000);
+
+    // luumテキスト表示後、フェードアウト開始（合計3.5秒）
+    const timer2 = setTimeout(() => {
+      setFadeOutLoading(true);
+    }, 3500);
+
+    // フェードアウト完了後、ローディング画面を完全に削除（合計4.5秒）
+    const timer3 = setTimeout(() => {
+      setShowLoading(false);
+      document.body.style.overflow = ''; // スクロールを再有効化
+    }, 4500);
+
+    return () => {
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+      clearTimeout(timer3);
+      document.body.style.overflow = ''; // クリーンアップ
+    };
+  }, []);
 
   // スクロール位置を監視して、ボタンの表示/非表示を制御
   useEffect(() => {
@@ -368,20 +401,120 @@ function MainComponent() {
   });
 
   return (
-    <div className="font-noto-sans relative max-w-[393px] mx-auto bg-white">
-      {/* ヘッダー */}
-      <header className="sticky top-0 z-50 bg-[#d2b48c] shadow-sm">
-        <div className="flex items-center justify-between px-4 py-4">
+    <>
+      {/* ローディングアニメーション */}
+      {showLoading && (
+        <div 
+          className={`fixed inset-0 z-[9999] transition-opacity duration-1000 ${
+            fadeOutLoading ? 'opacity-0' : 'opacity-100'
+          }`}
+        >
+          {/* Step 1: 白背景 + テキスト */}
+          <div className="absolute inset-0 bg-white flex items-center justify-center">
+            <p
+              className="text-lg md:text-xl text-center px-8 animate-fadeIn"
+              style={{
+                fontFamily: 'Yu Mincho, serif',
+                color: '#d2b48c',
+                lineHeight: '1.8',
+              }}
+            >
+              自分を大切にする時間を取り戻せる場所<br />
+              女性専用マシンピラティススタジオ
+            </p>
+          </div>
+
+          {/* Step 2: #d2b48c背景 + luum */}
+          <div
+            className={`absolute inset-0 bg-[#d2b48c] flex items-center justify-center transition-all duration-1000 ${
+              loadingStep === 2 ? 'translate-y-0' : '-translate-y-full'
+            }`}
+          >
+            <h1
+              className="text-4xl md:text-5xl font-medium text-white animate-fadeIn"
+              style={{
+                fontFamily: 'Yu Mincho, serif',
+                animationDelay: '0.3s',
+              }}
+            >
+              luum
+            </h1>
+          </div>
+        </div>
+      )}
+
+      <div className="font-noto-sans relative max-w-[393px] md:max-w-none mx-auto bg-white">
+        {/* ヘッダー */}
+        <header className="sticky top-0 z-50 bg-[#d2b48c] shadow-sm">
+        <div className="flex items-center justify-between px-4 md:px-8 lg:px-16 py-4 md:py-5 max-w-[393px] md:max-w-6xl mx-auto">
           {/* 左側：ロゴ */}
           <div className="flex-shrink-0">
-            <span className="text-2xl font-medium" style={{ fontFamily: 'Yu Mincho, serif', color: '#374151' }}>
+            <span className="text-2xl md:text-3xl font-medium" style={{ fontFamily: 'Yu Mincho, serif', color: '#ffffff' }}>
               luum
             </span>
           </div>
           
-          {/* 右側：ハンバーガーメニュー */}
+          {/* PC用：横並びメニュー */}
+          <nav className="hidden md:flex items-center space-x-6 lg:space-x-8">
+            <button
+              onClick={() => scrollToSection('reasons')}
+              className="text-white hover:text-white/80 transition-colors duration-200 text-sm lg:text-base"
+              style={{ fontFamily: 'Yu Mincho, serif' }}
+            >
+              選ばれる理由
+            </button>
+            <button
+              onClick={() => scrollToSection('recommended')}
+              className="text-white hover:text-white/80 transition-colors duration-200 text-sm lg:text-base"
+              style={{ fontFamily: 'Yu Mincho, serif' }}
+            >
+              おすすめの方
+            </button>
+            <button
+              onClick={() => scrollToSection('pricing')}
+              className="text-white hover:text-white/80 transition-colors duration-200 text-sm lg:text-base"
+              style={{ fontFamily: 'Yu Mincho, serif' }}
+            >
+              料金プラン
+            </button>
+            <button
+              onClick={() => scrollToSection('faq')}
+              className="text-white hover:text-white/80 transition-colors duration-200 text-sm lg:text-base"
+              style={{ fontFamily: 'Yu Mincho, serif' }}
+            >
+              よくある質問
+            </button>
+            
+            {/* CTAボタン群 */}
+            <div className="flex items-center space-x-3 lg:space-x-4 ml-4 lg:ml-6">
+              {/* 公式LINEボタン */}
+              <a
+                href="https://line.me/R/ti/p/@YOUR_LINE_ID"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center space-x-1 bg-[#06C755] hover:bg-[#05b34c] text-white px-3 lg:px-4 py-2 rounded-md transition-colors duration-200 text-sm lg:text-base font-medium"
+                style={{ fontFamily: 'Yu Mincho, serif' }}
+              >
+                <svg className="w-4 h-4 lg:w-5 lg:h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M19 2H5C3.346 2 2 3.346 2 5v14c0 1.654 1.346 3 3 3h14c1.654 0 3-1.346 3-3V5c0-1.654-1.346-3-3-3zm-7 15c-3.866 0-7-2.462-7-5.5S8.134 6 12 6s7 2.462 7 5.5-3.134 5.5-7 5.5z"/>
+                </svg>
+                <span>LINE</span>
+              </a>
+              
+              {/* 体験予約ボタン */}
+              <a
+                href="https://luum-pilates.hacomono.jp/home"
+                className="bg-gradient-to-b from-[#D4A5A5] to-[#B88888] hover:from-[#C49090] hover:to-[#A67777] text-white px-4 lg:px-5 py-2 rounded-md transition-colors duration-200 text-sm lg:text-base font-medium whitespace-nowrap"
+                style={{ fontFamily: 'Yu Mincho, serif' }}
+              >
+                体験予約
+              </a>
+            </div>
+          </nav>
+          
+          {/* モバイル用：ハンバーガーメニュー */}
           <button 
-            className="flex flex-col items-center justify-center w-10 h-10 space-y-1.5 relative z-[60]"
+            className="md:hidden flex flex-col items-center justify-center w-10 h-10 space-y-1.5 relative z-[60]"
             aria-label="メニュー"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
@@ -458,185 +591,193 @@ function MainComponent() {
       </div>
 
       {/* ファーストビュー画像 */}
-      <div className="relative bg-[#fafafa] overflow-hidden">
-        <img
-          src="/image/luum3.jpeg"
-          alt="ファーストビュー画像"
-          className="w-full h-[60vh] object-cover"
-          style={{ maxHeight: '100vh' }}
-        />
+      <div className="relative bg-[#fafafa] overflow-hidden flex justify-center">
+        <div className="w-full max-w-[393px] md:max-w-5xl lg:max-w-6xl">
+          <img
+            src="/image/luum3.jpeg"
+            alt="ファーストビュー画像"
+            className="w-full h-[60vh] md:h-[70vh] lg:h-[80vh] object-cover"
+            style={{ maxHeight: '100vh' }}
+          />
+        </div>
       </div>
 
       {/* 動画下にテキストを移動 */}
-      <section className="bg-white py-8 md:py-16 px-4 text-left">
-        <p className="text-2xl md:text-3xl font-bold mb-6 text-center" style={{ fontFamily: 'Yu Mincho, serif' }}>
-        本来のあなたへ。
-        </p>
-        <p className="text-lg md:text-2xl leading-loose max-w-2xl mb-6 text-text-left px-8" style={{ fontFamily: 'Hiragino Kaku Gothic, sans-serif', color: '#374151' }}>
-          luum は、日々の中で少しずつ積み重ねた
-          "緊張"をほどき、本来のあなたらしさと
-          美しさを取り戻すための場所です。<br /><br />
-          呼吸が深まるたび、心も、体も、<br />
-          そして生き方までも整っていく。
-        </p>
-        
+      <section className="bg-white py-8 md:py-16 lg:py-20 px-4 text-left">
+        <div className="max-w-[393px] md:max-w-3xl lg:max-w-4xl mx-auto">
+          <p className="text-2xl md:text-4xl lg:text-5xl font-bold mb-6 md:mb-10 text-center" style={{ fontFamily: 'Yu Mincho, serif' }}>
+          本来のあなたへ。
+          </p>
+          <p className="text-lg md:text-2xl lg:text-3xl leading-loose md:leading-loose lg:leading-loose max-w-2xl md:max-w-3xl lg:max-w-4xl mx-auto mb-6 text-text-left px-4 md:px-8" style={{ fontFamily: 'Hiragino Kaku Gothic, sans-serif', color: '#374151' }}>
+            luum は、日々の中で少しずつ積み重ねた
+            "緊張"をほどき、本来のあなたらしさと
+            美しさを取り戻すための場所です。<br /><br />
+            呼吸が深まるたび、心も、体も、<br />
+            そして生き方までも整っていく。
+          </p>
+        </div>
       </section>
 
-      <section className="bg-white py-8 md:py-16 text-center">
-        <SectionHeader 
-          title={`何気ない毎日の中で、\n見過ごしている自分のサイン`}
-          style={{ fontFamily: 'Yu Mincho, serif', color: '#374151' }}
-          showLine={false}
-        />
-        <div className="w-full">
-          <div className="flex justify-center">
-            <img 
-              src="/image/nayami2.png" 
-              alt="悩みの画像"
-              className="w-full h-auto"
-            />
-          </div>
-        </div>
-        
-      </section>
-
-      <section className="bg-white py-8 md:py-16 text-center">
-        <SectionHeader 
-          title={`luumに通うと・・・`}
-          style={{ fontFamily: 'Yu Mincho, serif', color: '#374151' }}
-          showLine={false}
-        />
-        
-
-        <p className="text-lg md:text-2xl leading-loose max-w-2xl mb-6 text-left px-8" style={{ fontFamily: 'Hiragino Kaku Gothic, sans-serif', color: '#374151' }}>
-          整える時間が、あなたの"心と体"を、美しく生まれ変わらせます。
-        </p>
-        
-        <div className="max-w-2xl mx-auto px-8 mb-6">
-          <ul className="space-y-3 text-base md:text-lg leading-relaxed text-left" style={{ fontFamily: 'Hiragino Kaku Gothic, sans-serif', color: '#374151' }}>
-            <li className="flex items-start">
-              <span className="text-green-500 mr-3 flex-shrink-0 self-center">✓</span>
-              <span className="text-left" style={{ color: '#374151' }}>姿勢が整い、背筋が自然と伸びる</span>
-            </li>
-            <li className="flex items-start">
-              <span className="text-green-500 mr-3 flex-shrink-0 self-center">✓</span>
-              <span className="text-left" style={{ color: '#374151' }}>代謝が上がり、体のラインが引き締まる</span>
-            </li>
-            <li className="flex items-start">
-              <span className="text-green-500 mr-3 flex-shrink-0 self-center">✓</span>
-              <span className="text-left" style={{ color: '#374151' }}>深い呼吸で、心まで軽くなる</span>
-            </li>
-            <li className="flex items-start">
-              <span className="text-green-500 mr-3 flex-shrink-0 self-center">✓</span>
-              <span className="text-left" style={{ color: '#374151' }}>"整う時間"を通して、自分を大切にできるようになる</span>
-            </li>
-            <li className="flex items-start">
-              <span className="text-green-500 mr-3 flex-shrink-0 self-center">✓</span>
-              <span className="text-left" style={{ color: '#374151' }}>気づけば、表情まで明るく、日常に自信が戻ってくる</span>
-            </li>
-          </ul>
-        </div>
-        <div className="max-w-2xl mx-auto px-8 mb-6">
-          <div className="flex justify-center">
-            <img 
-              src="/image/tokutyou.png" 
-              alt="悩みの画像"
-              className="w-full h-auto"
-            />
+      <section className="bg-white py-8 md:py-16 lg:py-20 text-center">
+        <div className="max-w-[393px] md:max-w-5xl mx-auto px-4">
+          <SectionHeader 
+            title={`何気ない毎日の中で、\n見過ごしている自分のサイン`}
+            style={{ fontFamily: 'Yu Mincho, serif', color: '#374151' }}
+            showLine={false}
+          />
+          <div className="w-full max-w-3xl mx-auto">
+            <div className="flex justify-center">
+              <img 
+                src="/image/nayami2.png" 
+                alt="悩みの画像"
+                className="w-full h-auto"
+              />
+            </div>
           </div>
         </div>
       </section>
 
-      <section id="reasons" className="bg-white py-8 md:py-16 text-center">
-        <SectionHeader 
-          title={`luumが選ばれる理由`}
-          style={{ fontFamily: 'Hiragino Kaku Gothic, sans-serif', color: '#d2b48c' }}
+      <section className="bg-white py-8 md:py-16 lg:py-20 text-center">
+        <div className="max-w-[393px] md:max-w-5xl mx-auto px-4">
+          <SectionHeader 
+            title={`luumに通うと・・・`}
+            style={{ fontFamily: 'Yu Mincho, serif', color: '#374151' }}
+            showLine={false}
+          />
           
-        />
-        
-        <p className="text-xl md:text-3xl leading-loose max-w-2xl mb-6 text-left px-8" style={{ fontFamily: 'Yu Mincho, serif', color: '#374151' }}>
-        一人ひとりに寄り添う、セミパーソナルレッスン
-        </p>
-        
-        <div className="max-w-2xl mx-auto px-8 mb-6">
-          <ul className="space-y-3 text-base md:text-lg leading-loose text-left" style={{ fontFamily: 'Hiragino Kaku Gothic, sans-serif', color: '#374151' }}>
-            <li className="flex items-start">
-              
-              <span className="text-left" style={{ color: '#374151' }}>最大8名までの少人数制。大手スタジオのように流れ作業ではなく、講師が一人ひとりの身体の癖や状態を丁寧にサポート。"無理なく整う"実感が、続けるほどに深まります。</span>
-            </li>
-            
-          </ul>
-         </div>
 
-        <div className="max-w-2xl mx-auto px-8 mb-6">
-          <div className="flex justify-center">
-            <img 
-              src="/image/kayouto.png" 
-              alt="悩みの画像"
-              className="w-full h-auto"
-            />
+          <p className="text-lg md:text-2xl lg:text-3xl leading-loose mb-8 md:mb-12 text-left px-4 md:px-8 max-w-4xl mx-auto" style={{ fontFamily: 'Hiragino Kaku Gothic, sans-serif', color: '#374151' }}>
+            整える時間が、あなたの"心と体"を、美しく生まれ変わらせます。
+          </p>
+          
+          <div className="max-w-2xl md:max-w-4xl mx-auto px-4 md:px-8 mb-8 md:mb-12">
+            <ul className="space-y-4 md:space-y-5 text-base md:text-lg lg:text-xl leading-relaxed text-left" style={{ fontFamily: 'Hiragino Kaku Gothic, sans-serif', color: '#374151' }}>
+              <li className="flex items-start">
+                <span className="text-green-500 mr-3 md:mr-4 flex-shrink-0 self-center text-xl md:text-2xl">✓</span>
+                <span className="text-left" style={{ color: '#374151' }}>姿勢が整い、背筋が自然と伸びる</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-green-500 mr-3 md:mr-4 flex-shrink-0 self-center text-xl md:text-2xl">✓</span>
+                <span className="text-left" style={{ color: '#374151' }}>代謝が上がり、体のラインが引き締まる</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-green-500 mr-3 md:mr-4 flex-shrink-0 self-center text-xl md:text-2xl">✓</span>
+                <span className="text-left" style={{ color: '#374151' }}>深い呼吸で、心まで軽くなる</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-green-500 mr-3 md:mr-4 flex-shrink-0 self-center text-xl md:text-2xl">✓</span>
+                <span className="text-left" style={{ color: '#374151' }}>"整う時間"を通して、自分を大切にできるようになる</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-green-500 mr-3 md:mr-4 flex-shrink-0 self-center text-xl md:text-2xl">✓</span>
+                <span className="text-left" style={{ color: '#374151' }}>気づけば、表情まで明るく、日常に自信が戻ってくる</span>
+              </li>
+            </ul>
           </div>
-        </div>
-        <p className="text-xl md:text-3xl leading-loose max-w-2xl mb-6 text-left px-8" style={{ fontFamily: 'Yu Mincho, serif', color: '#374151' }}>
-         女性の感性を満たす、上質で心地よい空間
-        </p>
-        
-        <div className="max-w-2xl mx-auto px-8 mb-6">
-          <ul className="space-y-3 text-base md:text-lg leading-loose text-left" style={{ fontFamily: 'Hiragino Kaku Gothic, sans-serif', color: '#374151' }}>
-            <li className="flex items-start">
-              
-              <span className="text-left" style={{ color: '#374151' }}>美容室を運営してきた私たちがこだわった、女性のための美しい内装と居心地。「自分のための時間」を過ごす場所として、通うたびに心が整い、美意識が高まるサロンです。</span>
-            </li>
-            
-          </ul>
-         </div>
-
-        <div className="max-w-2xl mx-auto px-8 mb-6">
-          <div className="flex justify-center">
-            <img 
-              src="/image/tokutyou1.png" 
-              alt="悩みの画像"
-              className="w-full h-auto"
-            />
-          </div>
-        </div>
-        <p className="text-xl md:text-3xl leading-loose max-w-2xl mb-6 text-left px-8" style={{ fontFamily: 'Yu Mincho, serif', color: '#374151' }}>
-        ”美と健康"をトータルで支える、特別なサポート
-        </p>
-        
-        <div className="max-w-2xl mx-auto px-8 mb-6">
-          <ul className="space-y-3 text-base md:text-lg leading-loose text-left" style={{ fontFamily: 'Hiragino Kaku Gothic, sans-serif', color: '#374151' }}>
-            <li className="flex items-start">
-              
-              <span className="text-left" style={{ color: '#374151' }}>身体を内側から綺麗にする為に水素水は飲み放題です。身体の内側からも美しく。さらに、美容院との連携でヘアケアや美容商材も体験可能。外側と内側、両方から「整える」を叶えます。</span>
-            </li>
-            
-          </ul>
-         </div>
-
-        <div className="max-w-2xl mx-auto px-8 mb-6">
-          <div className="flex justify-center">
-            <img 
-              src="/image/tokutyou2.png" 
-              alt="悩みの画像"
-              className="w-full h-auto"
-            />
+          <div className="max-w-2xl md:max-w-3xl mx-auto px-4 md:px-8 mb-6">
+            <div className="flex justify-center">
+              <img 
+                src="/image/tokutyou.png" 
+                alt="悩みの画像"
+                className="w-full h-auto"
+              />
+            </div>
           </div>
         </div>
       </section>
 
-       <section id="recommended" className="bg-white py-8 md:py-16 text-center">
-         <SectionHeader 
-           title={`このような方におすすめです`}
-           style={{ fontFamily: 'Hiragino Kaku Gothic, sans-serif', color: '#d2b48c' }}
+      <section id="reasons" className="bg-white py-8 md:py-16 lg:py-20 text-center">
+        <div className="max-w-[393px] md:max-w-5xl mx-auto px-4">
+          <SectionHeader 
+            title={`luumが選ばれる理由`}
+            style={{ fontFamily: 'Hiragino Kaku Gothic, sans-serif', color: '#d2b48c' }}
+            
+          />
+          
+          <p className="text-xl md:text-3xl lg:text-4xl leading-loose max-w-2xl md:max-w-4xl mb-6 md:mb-10 text-left px-4 md:px-8 mx-auto" style={{ fontFamily: 'Yu Mincho, serif', color: '#374151' }}>
+          一人ひとりに寄り添う、セミパーソナルレッスン
+          </p>
+          
+          <div className="max-w-2xl md:max-w-4xl mx-auto px-4 md:px-8 mb-8 md:mb-12">
+            <ul className="space-y-3 text-base md:text-lg lg:text-xl leading-loose text-left" style={{ fontFamily: 'Hiragino Kaku Gothic, sans-serif', color: '#374151' }}>
+              <li className="flex items-start">
+                
+                <span className="text-left" style={{ color: '#374151' }}>最大8名までの少人数制。大手スタジオのように流れ作業ではなく、講師が一人ひとりの身体の癖や状態を丁寧にサポート。"無理なく整う"実感が、続けるほどに深まります。</span>
+              </li>
+              
+            </ul>
+           </div>
+
+          <div className="max-w-2xl md:max-w-3xl mx-auto px-4 md:px-8 mb-12 md:mb-16">
+            <div className="flex justify-center">
+              <img 
+                src="/image/kayouto.png" 
+                alt="悩みの画像"
+                className="w-full h-auto"
+              />
+            </div>
+          </div>
+          <p className="text-xl md:text-3xl lg:text-4xl leading-loose max-w-2xl md:max-w-4xl mb-6 md:mb-10 text-left px-4 md:px-8 mx-auto" style={{ fontFamily: 'Yu Mincho, serif', color: '#374151' }}>
+           女性の感性を満たす、上質で心地よい空間
+          </p>
+          
+          <div className="max-w-2xl md:max-w-4xl mx-auto px-4 md:px-8 mb-8 md:mb-12">
+            <ul className="space-y-3 text-base md:text-lg lg:text-xl leading-loose text-left" style={{ fontFamily: 'Hiragino Kaku Gothic, sans-serif', color: '#374151' }}>
+              <li className="flex items-start">
+                
+                <span className="text-left" style={{ color: '#374151' }}>美容室を運営してきた私たちがこだわった、女性のための美しい内装と居心地。「自分のための時間」を過ごす場所として、通うたびに心が整い、美意識が高まるサロンです。</span>
+              </li>
+              
+            </ul>
+           </div>
+
+          <div className="max-w-2xl md:max-w-3xl mx-auto px-4 md:px-8 mb-12 md:mb-16">
+            <div className="flex justify-center">
+              <img 
+                src="/image/tokutyou1.png" 
+                alt="悩みの画像"
+                className="w-full h-auto"
+              />
+            </div>
+          </div>
+          <p className="text-xl md:text-3xl lg:text-4xl leading-loose max-w-2xl md:max-w-4xl mb-6 md:mb-10 text-left px-4 md:px-8 mx-auto" style={{ fontFamily: 'Yu Mincho, serif', color: '#374151' }}>
+          "美と健康"をトータルで支える、特別なサポート
+          </p>
+          
+          <div className="max-w-2xl md:max-w-4xl mx-auto px-4 md:px-8 mb-8 md:mb-12">
+            <ul className="space-y-3 text-base md:text-lg lg:text-xl leading-loose text-left" style={{ fontFamily: 'Hiragino Kaku Gothic, sans-serif', color: '#374151' }}>
+              <li className="flex items-start">
+                
+                <span className="text-left" style={{ color: '#374151' }}>身体を内側から綺麗にする為に水素水は飲み放題です。身体の内側からも美しく。さらに、美容院との連携でヘアケアや美容商材も体験可能。外側と内側、両方から「整える」を叶えます。</span>
+              </li>
+              
+            </ul>
+           </div>
+
+          <div className="max-w-2xl md:max-w-3xl mx-auto px-4 md:px-8 mb-6">
+            <div className="flex justify-center">
+              <img 
+                src="/image/tokutyou2.png" 
+                alt="悩みの画像"
+                className="w-full h-auto"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+       <section id="recommended" className="bg-white py-8 md:py-16 lg:py-20 text-center">
+         <div className="max-w-[393px] md:max-w-5xl lg:max-w-6xl mx-auto px-4">
+           <SectionHeader 
+             title={`このような方におすすめです`}
+             style={{ fontFamily: 'Hiragino Kaku Gothic, sans-serif', color: '#d2b48c' }}
+             
+           />
+           <p className="text-lg md:text-2xl lg:text-3xl leading-loose max-w-2xl md:max-w-4xl mx-auto mb-8 md:mb-12 text-left px-4 md:px-8" style={{ fontFamily: 'Yu Mincho, serif', color: '#374151' }}>
+           家族のために頑張ってきたけれど、そろそろ"自分のための時間"も大切にしたい。そんな大人女性のあなたへ。
+          </p>
            
-         />
-         <p className="text-lg md:text-2xl leading-loose max-w-2xl mb-6 text-left px-8" style={{ fontFamily: 'Yu Mincho, serif', color: '#374151' }}>
-         家族のために頑張ってきたけれど、そろそろ“自分のための時間”も大切にしたい。そんな大人女性のあなたへ。
-        </p>
-         
-         <div className="max-w-6xl mx-auto px-4">
-           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 md:gap-8 mb-8">
              {/* カード1 */}
             <div className="bg-white rounded-xl p-6 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex gap-4 border border-gray-100">
               <div className="flex-shrink-0 flex flex-col items-center gap-3">
@@ -748,32 +889,32 @@ function MainComponent() {
              </div>
            </div>
 
-           </div>
-
            {/* 締めコピー */}
-          <p className="text-base md:text-lg leading-relaxed max-w-2xl mx-auto mb-6 text-left px-8" style={{ fontFamily: 'Hiragino Kaku Gothic, sans-serif', color: '#374151' }}>
+          <p className="text-base md:text-lg lg:text-xl leading-relaxed max-w-2xl md:max-w-4xl mx-auto mb-6 text-left px-4 md:px-8" style={{ fontFamily: 'Hiragino Kaku Gothic, sans-serif', color: '#374151' }}>
                luumは、全ての女性が「自分を大切にする時間」を取り戻せる場所です。忙しさの中で忘れていた"心地よさ"を、ここで一緒に見つけませんか？
              </p>
-         
+         </div>
         </section>
 
           {/* 店舗紹介セクション */}
           
-          <section className="bg-white pt-12 md:pt-16 pb-6 md:pb-8 text-center">
-           <div className="text-center mb-6">
-             <p className="text-2xl md:text-3xl font-bold mb-4" style={{ fontFamily: 'Yu Mincho, serif', color: '#d2b48c' }}>
-               2025年12月1日プレオープン！
+          <section className="bg-white pt-12 md:pt-16 lg:pt-20 pb-6 md:pb-8 text-center">
+           <div className="max-w-[393px] md:max-w-5xl mx-auto px-4">
+             <div className="text-center mb-6 md:mb-10">
+               <p className="text-2xl md:text-4xl lg:text-5xl font-bold mb-4 md:mb-6" style={{ fontFamily: 'Yu Mincho, serif', color: '#d2b48c' }}>
+                 2025年12月1日プレオープン！
+               </p>
+             </div>
+             <p className="text-base md:text-lg lg:text-xl leading-loose max-w-2xl md:max-w-4xl mx-auto mb-6 text-left px-4 md:px-8" style={{ fontFamily: 'Hiragino Kaku Gothic, sans-serif', color: '#374151' }}>
+               愛知県春日井市にある女性専用マシンピラティススタジオ。全ての女性が"自分を整える時間"を取り戻せる特別な空間です。女性専用・少人数制で、水素水飲み放題。美容院との連携でトータルケアも。まずは0円の体験レッスンから。
              </p>
            </div>
-           <p className="text-base md:text-lg leading-loose max-w-2xl mx-auto mb-6 text-left px-8" style={{ fontFamily: 'Hiragino Kaku Gothic, sans-serif', color: '#374151' }}>
-             愛知県春日井市にある女性専用マシンピラティススタジオ。全ての女性が"自分を整える時間"を取り戻せる特別な空間です。女性専用・少人数制で、水素水飲み放題。美容院との連携でトータルケアも。まずは0円の体験レッスンから。
-           </p>
          </section>
 
         {/* TAKE A PILATES LESSON セクション */}
-        <section className="pt-8 md:pt-12 pb-16">
+        <section className="pt-8 md:pt-12 lg:pt-16 pb-16 md:pb-20">
           {/* 上部：横長画像 */}
-          <div className="w-full mb-0">
+          <div className="w-full mb-0 max-w-[393px] md:max-w-5xl lg:max-w-6xl mx-auto">
             <img 
               src="/image/price1.png" 
               alt="luumスタジオ" 
@@ -782,71 +923,74 @@ function MainComponent() {
           </div>
 
           {/* 下部：背景画像 + 緑色カバー + コンテンツ */}
-          <div 
-            className="relative w-full h-[500px] bg-cover bg-center flex flex-col items-center justify-center"
-            style={{ backgroundImage: "url('/image/luum12.jpeg')" }}
-          >
-            {/* ベージュ系の半透明カバー */}
-            <div className="absolute inset-0 bg-[#ede4e1]/70"></div>
+          <div className="flex justify-center">
+            <div 
+              className="relative w-full max-w-[393px] md:max-w-5xl lg:max-w-6xl h-[500px] md:h-[600px] lg:h-[700px] bg-cover bg-center flex flex-col items-center justify-center"
+              style={{ backgroundImage: "url('/image/luum12.jpeg')" }}
+            >
+              {/* ベージュ系の半透明カバー */}
+              <div className="absolute inset-0 bg-[#ede4e1]/70"></div>
 
             {/* コンテンツ */}
-            <div className="relative z-10 text-center text-white px-4">
-              <h2 className="text-3xl md:text-4xl font-bold mb-6 tracking-wider" style={{ fontFamily: 'Arial, sans-serif', textShadow: '2px 2px 8px rgba(0, 0, 0, 0.8)' }}>
+            <div className="relative z-10 text-center text-white px-4 md:px-8">
+              <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-6 md:mb-10 tracking-wider" style={{ fontFamily: 'Arial, sans-serif', textShadow: '2px 2px 8px rgba(0, 0, 0, 0.8)' }}>
                 TAKE A PILATES LESSON
               </h2>
-              <p className="text-lg md:text-xl mb-8" style={{ fontFamily: 'Hiragino Kaku Gothic', textShadow: '2px 2px 6px rgba(0, 0, 0, 0.8)' }}>
+              <p className="text-lg md:text-2xl lg:text-3xl mb-8 md:mb-10" style={{ fontFamily: 'Hiragino Kaku Gothic', textShadow: '2px 2px 6px rgba(0, 0, 0, 0.8)' }}>
               12月1日〜無料体験会開催！
               </p>
 
-              <p className="text-xl md:text-2xl mb-4" style={{ fontFamily: 'Hiragino Kaku Gothic', textShadow: '2px 2px 6px rgba(0, 0, 0, 0.8)' }}>
+              <p className="text-xl md:text-2xl lg:text-3xl mb-4 md:mb-6" style={{ fontFamily: 'Hiragino Kaku Gothic', textShadow: '2px 2px 6px rgba(0, 0, 0, 0.8)' }}>
               体験予約または<br />LINE登録で詳細をお届け。
               </p>
-              <p className="text-xl md:text-2xl mb-4" style={{ fontFamily: 'Hiragino Kaku Gothic', textShadow: '2px 2px 6px rgba(0, 0, 0, 0.8)' }}>
+              <p className="text-xl md:text-2xl lg:text-3xl mb-4 md:mb-6" style={{ fontFamily: 'Hiragino Kaku Gothic', textShadow: '2px 2px 6px rgba(0, 0, 0, 0.8)' }}>
               入会金・事務手数料・施設利用料
               </p>
 
-              <div className="text-5xl md:text-6xl font-bold mb-8" style={{ fontFamily: 'Arial, sans-serif', textShadow: '2px 2px 10px rgba(0, 0, 0, 0.9)' }}>
+              <div className="text-5xl md:text-6xl lg:text-7xl font-bold mb-8 md:mb-12" style={{ fontFamily: 'Arial, sans-serif', textShadow: '2px 2px 10px rgba(0, 0, 0, 0.9)' }}>
                 \ ¥0 /
             </div>
 
               <a 
-                href="/form"
-                className="inline-block bg-gradient-to-b from-[#D4A5A5] to-[#B88888] hover:from-[#C49090] hover:to-[#A67777] text-white font-medium py-4 px-12 rounded-md transition-colors duration-300 text-lg"
+                href="https://luum-pilates.hacomono.jp/home"
+                className="inline-block bg-gradient-to-b from-[#D4A5A5] to-[#B88888] hover:from-[#C49090] hover:to-[#A67777] text-white font-medium py-4 md:py-5 px-12 md:px-16 rounded-md transition-colors duration-300 text-lg md:text-xl lg:text-2xl"
                 style={{ fontFamily: 'Yu Mincho, serif' }}
               >
                 体験レッスンを予約
               </a>
               
-              <div className="mt-4">
+              <div className="mt-4 md:mt-6">
                 <a 
                   href="/experience-flow"
-                  className="text-white underline hover:no-underline transition-all duration-300 text-base"
+                  className="text-white underline hover:no-underline transition-all duration-300 text-base md:text-lg lg:text-xl"
                   style={{ fontFamily: 'Hiragino Kaku Gothic', textShadow: '1px 1px 4px rgba(0, 0, 0, 0.8)' }}
                 >
                   体験の流れはこちら ▶︎▶︎▶︎
                 </a>
               </div>
             </div>
+            </div>
           </div>
         </section>
 
        
 
-        <section id="pricing" className="bg-white py-8 md:py-16 text-center">
-        <SectionHeader 
-          title={`PRICE`}
-          style={{ fontFamily: 'Hiragino Kaku Gothic, sans-serif', color: '#d2b48c' }}
+        <section id="pricing" className="bg-white py-8 md:py-16 lg:py-20 text-center">
+        <div className="max-w-[393px] md:max-w-6xl mx-auto px-4">
+          <SectionHeader 
+            title={`PRICE`}
+            style={{ fontFamily: 'Hiragino Kaku Gothic, sans-serif', color: '#d2b48c' }}
+            
+          />
           
-        />
-        
-        <p className="text-lg md:text-2xl leading-loose max-w-2xl mb-6 text-center px-8" style={{ fontFamily: 'Yu Mincho, serif', color: '#374151' }}>
-        通いやすい料金プラン
-        </p>
+          <p className="text-lg md:text-2xl lg:text-3xl leading-loose max-w-2xl md:max-w-4xl mx-auto mb-6 md:mb-10 text-center px-4 md:px-8" style={{ fontFamily: 'Yu Mincho, serif', color: '#374151' }}>
+          通いやすい料金プラン
+          </p>
 
-        <p className="text-base text-gray-600 mb-8">※表示価格は全て税込価格になります。</p>
+          <p className="text-base md:text-lg text-gray-600 mb-8 md:mb-12">※表示価格は全て税込価格になります。</p>
 
-        {/* 料金プランカード */}
-        <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-6 pb-16">
+          {/* 料金プランカード */}
+          <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 pb-16 md:pb-20">
           
           {/* プラン1: 通常料金プラン */}
           <div className="bg-white rounded-2xl shadow-lg overflow-hidden border-2 border-gray-300">
@@ -1069,29 +1213,29 @@ function MainComponent() {
                 対象プラン：全プラン対象
               </p>
           </div>
-    </div>
-    
-  </div>
-
-</section>
-
-        <section id="faq" className="bg-white py-8 md:py-16">
-        <div className="text-center mb-12">
-        <SectionHeader 
-            title={`FAQ`}
-            style={{ fontFamily: 'Hiragino Kaku Gothic, sans-serif', color: '#d2b48c' }}
-          />
-          <p className="text-lg md:text-2xl leading-loose max-w-2xl mx-auto mb-6 px-8" style={{ fontFamily: 'Yu Mincho, serif', color: '#374151' }}>
-            よくある質問
-          </p>
         </div>
+        </div>
+      </div>
+    </section>
 
-        <div className="max-w-4xl mx-auto px-4">
+        <section id="faq" className="bg-white py-8 md:py-16 lg:py-20">
+        <div className="max-w-[393px] md:max-w-5xl mx-auto px-4">
+          <div className="text-center mb-12 md:mb-16">
+          <SectionHeader 
+              title={`FAQ`}
+              style={{ fontFamily: 'Hiragino Kaku Gothic, sans-serif', color: '#d2b48c' }}
+            />
+            <p className="text-lg md:text-2xl lg:text-3xl leading-loose max-w-2xl md:max-w-4xl mx-auto mb-6 px-4 md:px-8" style={{ fontFamily: 'Yu Mincho, serif', color: '#374151' }}>
+              よくある質問
+            </p>
+          </div>
+
+          <div className="max-w-4xl mx-auto px-4">
           <div className="space-y-4">
             {[
               {
                 question: "トライアルレッスンを受講したいのですが、どうすればいいですか？",
-                answer: "レッスンは全て予約制となっております。\n予約フォームからご予約が可能です。「体験する店舗を探す」よりお進みください。\nお電話でのご予約も承っております。\nTEL：0570-050-055\n電話受付時間：平日・土日祝 9:00〜18:00"
+                answer: "レッスンは全て予約制となっております。\n画面下の予約フォームからご予約が可能です。\n公式LINE・お電話でのご予約も承っております。\nTEL：0570-050-055\n電話受付時間：平日・土日祝 9:00〜18:00"
               },
               {
                 question: "友達と一緒にトライアルレッスンを受けたいのですが、可能ですか？",
@@ -1099,15 +1243,15 @@ function MainComponent() {
               },
               {
                 question: "トライアルレッスンの持ち物は何ですか？",
-                answer: "下記のものをご用意ください。\n\n【レッスン】\n・靴下（レッスン中は靴下着用必須となります。当スタジオオリジナルのすべり止め付きソックスも店頭で販売しております）\n・汗拭きタオル\n・水分補給用の飲料（お水をお勧めします）\n\n【ご入会手続き】\n・現金、クレジットカード（月会費、施設利用料、施設維持費の前納金分）\n・キャッシュカードもしくは口座情報のわかる物\n・身分証明書（免許書、保険証、パスポート、マイナンバーカード等）\n\nトライアルレッスン当日限定でご入会キャンペーンをご利用いただけます！\n当日のお支払いにつきましてはご利用のキャンペーン、コースによって異なります。"
+                answer: "下記のものをご用意ください。\n\n【レッスン】\n・靴下\n・汗拭きタオル\n・水分補給用の飲料（お水をお勧めします）\n\n【ご入会手続き】\n・現金、クレジットカード（月会費、施設利用料、施設維持費の前納金分）\n・キャッシュカードもしくは口座情報のわかる物\n・身分証明書（免許書、保険証、パスポート、マイナンバーカード等）\n\nトライアルレッスン当日限定でご入会キャンペーンをご利用いただけます！\n当日のお支払いにつきましてはご利用のキャンペーン、コースによって異なります。"
               },
               {
                 question: "トライアルレッスンは何分前に行けばよいですか？",
-                answer: "レッスン開始10分前にご来店いただき、簡単な体調チェックや館内説明がございます。\nレッスン終了後は、お着替え、レッスンのご案内やお手続きなども含めてお帰りまで約2時間程度お時間を見ていただいております。"
+                answer: "レッスン開始20分前にご来店いただき、簡単な体調チェックや館内説明がございます。\nレッスン終了後は、お着替え、レッスンのご案内やお手続きなども含めてお帰りまで約1時間30分程度お時間を見ていただいております。"
               },
               {
                 question: "トライアルレッスン当日はどれくらい時間が必要ですか？",
-                answer: "レッスン開始25分前にご来店いただき、簡単な体調チェックや館内説明がございます。\nレッスン終了後は、お着替え、レッスンのご案内やお手続きなども含めてお帰りまで約2時間程度お時間を見ていただいております。"
+                answer: "レッスン開始20分前にご来店いただき、簡単な体調チェックや館内説明がございます。\nレッスン終了後は、お着替え、レッスンのご案内やお手続きなども含めてお帰りまで約2時間程度お時間を見ていただいております。"
               },
               {
                 question: "トライアルレッスンを2回以上利用することはできますか？",
@@ -1119,15 +1263,15 @@ function MainComponent() {
                 className="border-l-2 group"
                 style={{ borderColor: '#d2b48c' }}
               >
-                <summary className="pl-6 pr-4 py-4 cursor-pointer list-none flex justify-between items-start text-left hover:bg-gray-50 transition-colors">
-                  <span className="text-base md:text-lg text-gray-800 pr-4" style={{ fontFamily: 'Hiragino Kaku Gothic, sans-serif' }}>
+                <summary className="pl-6 pr-4 py-4 md:py-5 cursor-pointer list-none flex justify-between items-start text-left hover:bg-gray-50 transition-colors">
+                  <span className="text-base md:text-lg lg:text-xl text-gray-800 pr-4" style={{ fontFamily: 'Hiragino Kaku Gothic, sans-serif' }}>
                     {faq.question}
                   </span>
-                  <span className="transform group-open:rotate-180 transition-transform duration-300 flex-shrink-0 mt-1" style={{ color: '#d2b48c' }}>
+                  <span className="transform group-open:rotate-180 transition-transform duration-300 flex-shrink-0 mt-1 text-lg md:text-xl" style={{ color: '#d2b48c' }}>
                     ▼
                   </span>
                 </summary>
-                <div className="pl-6 pr-4 pb-4 pt-2 text-gray-600 text-sm md:text-base leading-relaxed">
+                <div className="pl-6 pr-4 pb-4 md:pb-6 pt-2 text-gray-600 text-sm md:text-base lg:text-lg leading-relaxed">
                   {faq.answer.split('\n').map((line, i) => (
                     <React.Fragment key={i}>
                       {line}
@@ -1138,29 +1282,29 @@ function MainComponent() {
               </details>
             ))}
           </div>
+          </div>
         </div>
-
       </section>
 
-      <footer className="bg-[#333] text-white py-8 md:py-16 px-4 pb-28 md:pb-32">
-        <div className="max-w-6xl mx-auto">
+      <footer className="bg-[#333] text-white py-8 md:py-16 lg:py-20 px-4 pb-28 md:pb-32">
+        <div className="max-w-[393px] md:max-w-5xl lg:max-w-6xl mx-auto">
           
-          <div className="grid md:grid-cols-2 gap-6 md:gap-8">
+          <div className="grid md:grid-cols-2 gap-6 md:gap-10 lg:gap-12">
             <div>
-              <h3 className="text-xl mb-4 flex items-center">
-                <i className="fab fa-instagram text-2xl mr-2"></i>
+              <h3 className="text-xl md:text-2xl lg:text-3xl mb-4 md:mb-6 flex items-center">
+                <i className="fab fa-instagram text-2xl md:text-3xl mr-2"></i>
                 Instagram
               </h3>
               <div className="flex flex-col space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <a 
-                    href="https://www.instagram.com/lZDc0MzIxNw==" 
+                    href="https://www.instagram.com/luum__pilates/?igsh=MXZxenVvcGtjZDV1NA%3D%3D&utm_source=qr#" 
                     target="_blank" 
                     rel="noopener noreferrer" 
                     className="flex items-center hover:text-[#4a90e2] transition-colors"
                   >
-                    <i className="fab fa-instagram text-xl mr-2"></i>
-                    <span className="text-sm">luum公式</span>
+                    <i className="fab fa-instagram text-xl md:text-2xl mr-2"></i>
+                    <span className="text-sm md:text-base lg:text-lg">luum公式</span>
                   </a>
                   
                   
@@ -1170,13 +1314,13 @@ function MainComponent() {
               </div>
             </div>
             <div>
-              <h3 className="text-xl mb-4">店舗情報</h3>
+              <h3 className="text-xl md:text-2xl lg:text-3xl mb-4 md:mb-6">店舗情報</h3>
                
                  
-              <p>住所：〒486-0849 愛知県春日井市八田町７－１－１３エイトプラット</p>
-              <p>営業時間：9:30〜21:00</p>
-              <p>定休日：不定休</p>
-              <div className="mt-4 w-full h-[300px] md:h-[400px]">
+              <p className="text-sm md:text-base lg:text-lg mb-2">住所：〒486-0849 愛知県春日井市八田町７－１－１３エイトプラット</p>
+              <p className="text-sm md:text-base lg:text-lg mb-2">営業時間：9:30〜21:00</p>
+              <p className="text-sm md:text-base lg:text-lg mb-4">定休日：不定休</p>
+              <div className="mt-4 md:mt-6 w-full h-[300px] md:h-[400px] lg:h-[500px]">
                 <iframe
                   src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3258.078199829464!2d136.96784387576872!3d35.254310272728034!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6003730079a4c85d%3A0x8f9183e8a652c9b9!2zRWlHSFQgUExhVCBLQVNVR0FJKOOCqOOCpOODiOODl-ODqeODg-ODiOaYpeaXpeS6lSk!5e0!3m2!1sja!2sjp!4v1761116618009!5m2!1sja!2sjp"
                   width="100%"
@@ -1196,23 +1340,23 @@ function MainComponent() {
       {/* トップへ戻るボタン */}
       <button
         onClick={scrollToTop}
-        className={`fixed bottom-4 right-4 z-40 bg-gray-700 text-white w-12 h-12 rounded-full shadow-lg flex items-center justify-center hover:bg-gray-600 transition-all duration-300 ${
+        className={`fixed bottom-4 right-4 md:bottom-8 md:right-8 z-40 bg-gray-700 text-white w-12 h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 rounded-full shadow-lg flex items-center justify-center hover:bg-gray-600 transition-all duration-300 ${
           showScrollTop ? 'opacity-100 visible' : 'opacity-0 invisible'
         }`}
       >
         <span className="sr-only">トップへ戻る</span>
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <svg className="w-6 h-6 md:w-7 md:h-7 lg:w-8 lg:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
         </svg>
       </button>
 
-      {/* 画面下部固定CTA（ファーストビュー80%過ぎたら表示） */}
+      {/* 画面下部固定CTA（ファーストビュー80%過ぎたら表示） - モバイルのみ表示 */}
       {showFixedCTA && (
-        <div className="fixed bottom-0 left-0 w-full z-50 bg-white shadow-lg">
+        <div className="md:hidden fixed bottom-0 left-0 w-full z-50 bg-white shadow-lg">
           <div className="flex">
             {/* 体験予約ボタン */}
           <Link
-              href="/form"
+              href="https://luum-pilates.hacomono.jp/home"
               className="flex-1 bg-gradient-to-b from-[#D4A5A5] to-[#B88888] text-white text-center py-4 hover:from-[#C49090] hover:to-[#A67777] transition duration-300 flex flex-col items-center justify-center"
             >
               <div className="flex items-center justify-center mb-1">
@@ -1242,7 +1386,8 @@ function MainComponent() {
           </div>
         </div>
       )}
-    </div>
+      </div>
+    </>
   );
 }
 

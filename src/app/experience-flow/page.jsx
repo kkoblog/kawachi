@@ -70,7 +70,7 @@ export default function ExperienceFlow() {
                   02 ｜ ご来店・受付
                 </h3>
                 <p className="text-xs sm:text-sm md:text-base leading-relaxed" style={{ fontFamily: 'Hiragino Kaku Gothic, sans-serif', color: '#374151' }}>
-                  ご予約時間の10分前にお越しください。受付で簡単なアンケートにご記入いただきます。動きやすい服装でお越しいただくか、更衣室でお着替えいただけます。
+                  ご予約時間の20分前にお越しください。受付で簡単なアンケートにご記入いただきます。動きやすい服装でお越しいただくか、更衣室でお着替えいただけます。
                 </p>
               </div>
             </div>
@@ -165,7 +165,7 @@ export default function ExperienceFlow() {
               </li>
               <li className="flex items-start">
                 <span className="text-[#d2b48c] mr-3 flex-shrink-0">✓</span>
-                <span>靴下（5本指ソックスがおすすめ）</span>
+                <span>靴下</span>
               </li>
             </ul>
             
@@ -183,7 +183,7 @@ export default function ExperienceFlow() {
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
           <a 
-            href="/form"
+            href="https://luum-pilates.hacomono.jp/home"
             className="inline-block bg-gradient-to-b from-[#D4A5A5] to-[#B88888] hover:from-[#C49090] hover:to-[#A67777] text-white font-medium py-3 sm:py-4 px-8 sm:px-12 rounded-md transition-colors duration-300 text-base sm:text-lg"
             style={{ fontFamily: 'Yu Mincho, serif' }}
           >

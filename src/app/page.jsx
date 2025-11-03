@@ -489,7 +489,7 @@ function MainComponent() {
             <div className="flex items-center space-x-3 lg:space-x-4 ml-4 lg:ml-6">
               {/* 公式LINEボタン */}
               <a
-                href="https://line.me/R/ti/p/@YOUR_LINE_ID"
+                href="https://lin.ee/XPxBvMe"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center space-x-1 bg-[#06C755] hover:bg-[#05b34c] text-white px-3 lg:px-4 py-2 rounded-md transition-colors duration-200 text-sm lg:text-base font-medium"
@@ -1370,7 +1370,7 @@ function MainComponent() {
 
             {/* LINE登録ボタン */}
             <a
-              href="https://line.me/R/ti/p/@YOUR_LINE_ID"
+              href="https://lin.ee/XPxBvMe"
               target="_blank"
               rel="noopener noreferrer"
               className="flex-1 bg-white text-gray-700 border-l border-gray-200 text-center py-4 hover:bg-gray-50 transition duration-300 flex flex-col items-center justify-center"

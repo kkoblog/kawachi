@@ -608,9 +608,9 @@ function MainComponent() {
           <p className="text-2xl md:text-4xl lg:text-5xl font-bold mb-6 md:mb-10 text-center" style={{ fontFamily: 'Yu Mincho, serif' }}>
           本来のあなたへ。
           </p>
-          <p className="text-lg md:text-2xl lg:text-3xl leading-loose md:leading-loose lg:leading-loose max-w-2xl md:max-w-3xl lg:max-w-4xl mx-auto mb-6 text-text-left px-4 md:px-8" style={{ fontFamily: 'Hiragino Kaku Gothic, sans-serif', color: '#374151' }}>
-            luum は、日々の中で少しずつ積み重ねた
-            "緊張"をほどき、本来のあなたらしさと
+          <p className="text-base md:text-xl lg:text-2xl leading-loose md:leading-loose lg:leading-loose max-w-2xl md:max-w-3xl lg:max-w-4xl mx-auto mb-6 text-text-left px-4 md:px-8" style={{ fontFamily: 'Hiragino Kaku Gothic, sans-serif', color: '#374151' }}>
+            luum は、日々の中で少しずつ積み重ねた<br />
+            "緊張"をほどき、本来のあなたらしさと<br />
             美しさを取り戻すための場所です。<br /><br />
             呼吸が深まるたび、心も、体も、<br />
             そして生き方までも整っていく。
@@ -1247,12 +1247,9 @@ function MainComponent() {
               },
               {
                 question: "トライアルレッスンは何分前に行けばよいですか？",
-                answer: "レッスン開始20分前にご来店いただき、簡単な体調チェックや館内説明がございます。\nレッスン終了後は、お着替え、レッスンのご案内やお手続きなども含めてお帰りまで約1時間30分程度お時間を見ていただいております。"
+                answer: "レッスン開始5分前にご来店いただき、簡単な体調チェックや館内説明がございます。\nレッスン終了後は、お着替え、レッスンのご案内やお手続きなども含めてお帰りまで約1時間程度お時間を見ていただいております。"
               },
-              {
-                question: "トライアルレッスン当日はどれくらい時間が必要ですか？",
-                answer: "レッスン開始20分前にご来店いただき、簡単な体調チェックや館内説明がございます。\nレッスン終了後は、お着替え、レッスンのご案内やお手続きなども含めてお帰りまで約2時間程度お時間を見ていただいております。"
-              },
+              
               {
                 question: "トライアルレッスンを2回以上利用することはできますか？",
                 answer: "恐れ入りますが、トライアルレッスンを受講できるのは一名様につき1回限りとさせていただいております。\n2回目以降のご利用には入会手続きが必要となります。ご入会を検討されている方はご入会希望店舗にてトライアルレッスンのご予約・ご来店をお願いいたします。"
@@ -1318,6 +1315,7 @@ function MainComponent() {
                
                  
               <p className="text-sm md:text-base lg:text-lg mb-2">住所：〒486-0849 愛知県春日井市八田町７－１－１３エイトプラット</p>
+              <p className="text-sm md:text-base lg:text-lg mb-2">電話番号：0568-29-8799</p>
               <p className="text-sm md:text-base lg:text-lg mb-2">営業時間：9:30〜21:00</p>
               <p className="text-sm md:text-base lg:text-lg mb-4">定休日：不定休</p>
               <div className="mt-4 md:mt-6 w-full h-[300px] md:h-[400px] lg:h-[500px]">

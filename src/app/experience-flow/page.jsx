@@ -49,7 +49,7 @@ export default function ExperienceFlow() {
                   01 ｜ 体験レッスン予約
                 </h3>
                 <p className="text-xs sm:text-sm md:text-base leading-relaxed" style={{ fontFamily: 'Hiragino Kaku Gothic, sans-serif', color: '#374151' }}>
-                  お電話またはWebフォームから、お気軽にご予約ください。ご都合の良い日時をお選びいただけます。初めての方も安心してお問い合わせください。
+                  画面下部にある体験予約ボタンから、お気軽にご予約ください。ご都合の良い日時をお選びいただけます。初めての方も安心してお問い合わせください。
                 </p>
               </div>
             </div>
@@ -70,7 +70,7 @@ export default function ExperienceFlow() {
                   02 ｜ ご来店・受付
                 </h3>
                 <p className="text-xs sm:text-sm md:text-base leading-relaxed" style={{ fontFamily: 'Hiragino Kaku Gothic, sans-serif', color: '#374151' }}>
-                  ご予約時間の20分前にお越しください。受付で簡単なアンケートにご記入いただきます。動きやすい服装でお越しいただくか、更衣室でお着替えいただけます。
+                  ご予約時間の5分前にお越しください。受付で簡単なアンケートにご記入いただきます。動きやすい服装でお越しいただくか、更衣室でお着替えいただけます。
                 </p>
               </div>
             </div>
